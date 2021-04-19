@@ -29,10 +29,12 @@ export function createEditButton(container, store, data, tableObject, rowPattern
     editButton.textContent = 'Редактировать';
     const index = store.findIndex(el => el.id === data.id);
     const editedData = {...store[index]};
+    editedData.characteristics = store[index].characteristics.map(el => Object.assign({}, el))
+    editedData.rules = store[index].rules.map(el => Object.assign({}, el))
     container.appendChild(editButton);
 
     editButton.onclick = () => {
-        const rowCount = container.getAttribute('row-count')
+        const rowCount = container.getAttribute('row-count');
         const saveButton = document.createElement('button');
         saveButton.classList.add('button-save');
         saveButton.textContent = 'Сохранить';
@@ -82,7 +84,7 @@ function addData(tableObject) {
 
 function copyData(store, data, tableObject) {
     const index = store.findIndex(el => el.id === data.id);
-    const rowNumber = tableObject.body.rowCount;
+    const rowNumber = tableObject.body.rowCount + 1;
     const newStore = [...store];
     const newData = {...data, id: `${data.id}-copy`}
     newStore.splice(index + 1, 0, newData);
