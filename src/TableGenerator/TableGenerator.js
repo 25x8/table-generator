@@ -7,7 +7,7 @@ export class TableGenerator {
     HTMLTable;
     header;
     body;
-    rowTransformator;
+    dataTransformator;
 
     constructor({container, headerData}) {
         this.createWrapper(container);
@@ -42,8 +42,8 @@ export class TableGenerator {
     }
 
     updateBody(newData) {
-        if(this.rowTransformator) {
-            const transformedData = this.rowTransformator(newData);
+        if(this.dataTransformator) {
+            const transformedData = this.dataTransformator(newData);
             this.body.updateBody(transformedData);
         } else {
             this.body.updateBody(newData);
@@ -55,6 +55,6 @@ export class TableGenerator {
     }
 
     setDataTransformator(fn) {
-        this.rowTransformator = fn;
+        this.dataTransformator = fn;
     }
 }

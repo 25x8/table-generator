@@ -28,9 +28,14 @@ export class Body {
         HTMLRow.setAttribute('row-count', `${this.rowCount}`);
         this.HTMLBody.appendChild(HTMLRow);
 
-        row.forEach(cell => {
+        row.forEach((cell, index) => {
             const newCell = document.createElement('td');
-            if(typeof cell === 'function') {
+            const lastCell = index === row.length - 1
+            lastCell
+                ? newCell.setAttribute('row-count', `${this.rowCount}`)
+                : newCell.setAttribute('data-cell', 'true')
+
+            if (typeof cell === 'function') {
                 cell(newCell);
             } else {
                 newCell.textContent = cell;

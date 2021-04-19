@@ -1,4 +1,4 @@
-import {createCopyButton, createDeleteButton} from "./controlButtons";
+import {createCopyButton, createDeleteButton, createEditButton} from "./controlButtons";
 
 /* =======HEADER DATA======== */
 
@@ -171,6 +171,7 @@ export function getBodyRows(data, rowsPattern, tableObject) {
         row.push((cell) => {
             createCopyButton(cell, data, rowData, tableObject);
             createDeleteButton(cell, data, rowData, tableObject);
+            createEditButton(cell, data, rowData, tableObject, rowsPattern)
         });
 
         rows.push(row);
