@@ -1,6 +1,7 @@
 import {Header} from "./Header/Header";
 import {Body} from "./Body/Body";
 import "./table.scss";
+import {createAddButton} from "./utils/controlButtons";
 
 export class TableGenerator {
     HTMLWrapper;
@@ -8,6 +9,7 @@ export class TableGenerator {
     header;
     body;
     dataTransformator;
+    currentData;
 
     constructor({container, headerData}) {
         this.createWrapper(container);
@@ -41,7 +43,12 @@ export class TableGenerator {
         })
     }
 
+    insertAddButton(container) {
+        createAddButton(container, this.currentData, this)
+    }
+
     updateBody(newData) {
+        this.currentData = newData;
         if(this.dataTransformator) {
             const transformedData = this.dataTransformator(newData);
             this.body.updateBody(transformedData);

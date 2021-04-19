@@ -22,6 +22,8 @@ export class Body {
         });
     }
 
+
+
     addRow(row) {
         this.rowCount++;
         const HTMLRow = document.createElement('tr');

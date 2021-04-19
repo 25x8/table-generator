@@ -12,9 +12,10 @@ document.body.onload = () => {
 
 
 
-    const bodyRows = getBodyRows(data, table.getRowPattern());
+    const bodyRows = getBodyRows(data, table.getRowPattern(), table);
     table.createBody(bodyRows);
     table.setDataTransformator((newData) => getBodyRows(newData, table.getRowPattern(), table));
+    table.insertAddButton(document.querySelector('th[self-id="control"]'));
 
     table.updateBody([
         {

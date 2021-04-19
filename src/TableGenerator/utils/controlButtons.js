@@ -1,65 +1,3 @@
-const dataPattern = {
-    id: "new-row",
-    characteristics: [
-        {
-            id: "weight",
-            min: null,
-            max: null,
-            eq: null,
-        },{
-            id: "length",
-            min: null,
-            max: null,
-            eq: null,
-        }
-    ],
-    rules: [
-        {
-            id: "inner_diameter",
-            min: null,
-            max: null,
-            eq: null,
-            grade: "premium"
-        },
-        {
-            id: "outer_diameter",
-            min: null,
-            max: null,
-            eq: null,
-            grade: "premium"
-        },
-        {
-            id: "inner_diameter",
-            min: null,
-            max: null,
-            eq: null,
-            grade: "secondary"
-        },
-        {
-            id: "outer_diameter",
-            min: null,
-            max: null,
-            eq: null,
-            grade: "secondary"
-        },
-        {
-            id: "inner_diameter",
-            min: null,
-            max: null,
-            eq: null,
-            grade: "reject"
-        },
-        {
-            id: "outer_diameter",
-            min: null,
-            max: null,
-            eq: null,
-            grade: "reject"
-        },
-    ]
-}
-
-
 export function createCopyButton(container, store, data, tableObject) {
     const button = document.createElement('button');
     button.classList.add('button-copy');
@@ -76,16 +14,25 @@ export function createDeleteButton(container, store, data, tableObject) {
     container.appendChild(button);
 }
 
+export function createAddButton(container, store, tableObject) {
+    const button = document.createElement('button');
+    button.classList.add('button-add');
+    button.textContent = 'Добавить';
+    button.onclick = () => addData(tableObject);
+    container.appendChild(button);
+}
+
 export function createEditButton(container, store, data, tableObject, rowPattern) {
     const buttons = container.querySelectorAll('button');
     const editButton = document.createElement('button');
-    editButton.classList.add('button-delete');
+    editButton.classList.add('button-edit');
     editButton.textContent = 'Редактировать';
     const index = store.findIndex(el => el.id === data.id);
     const editedData = {...store[index]};
     container.appendChild(editButton);
-    const rowCount = container.getAttribute('row-count')
+
     editButton.onclick = () => {
+        const rowCount = container.getAttribute('row-count')
         const saveButton = document.createElement('button');
         saveButton.classList.add('button-save');
         saveButton.textContent = 'Сохранить';
@@ -94,14 +41,11 @@ export function createEditButton(container, store, data, tableObject, rowPattern
 
         dataCells.forEach((cell, index) => {
             cell.setAttribute('contenteditable', 'true');
-
-            // rowPattern[index]
             const dataType = rowPattern[index][0];
             let charType, editGroup;
             if(dataType === 'characteristics') {
                 charType = editedData[dataType];
                 editGroup = charType.filter(el => el.id === rowPattern[index][1])[0];
-
             } else {
                  editGroup = editedData['rules'].filter(el => `${el.id}-${el.grade}` === rowPattern[index][1])[0];
             }
@@ -114,27 +58,37 @@ export function createEditButton(container, store, data, tableObject, rowPattern
 
         buttons.forEach(el => el.hidden = true);
         saveButton.onclick = () => {
-            container.appendChild(editButton);
-            container.removeChild(saveButton);
-            buttons.forEach(el => el.hidden = false);
-            dataCells.forEach(cell => cell.setAttribute('contenteditable', 'false'));
+
             store[index] = {
                 ...editedData
             }
+
             tableObject.updateBody(store);
         }
         container.removeChild(editButton);
         container.appendChild(saveButton);
     };
+}
 
+
+function addData(tableObject) {
+    const emptyData = createEmptyData();
+    emptyData.id += '12' + Date.now();
+    tableObject.currentData.push(emptyData);
+    tableObject.updateBody(tableObject.currentData);
+    const editButton = document.querySelector(`td[row-count="${tableObject.body.rowCount}"] .button-edit`);
+    editButton.click();
 }
 
 function copyData(store, data, tableObject) {
     const index = store.findIndex(el => el.id === data.id);
+    const rowNumber = tableObject.body.rowCount;
     const newStore = [...store];
     const newData = {...data, id: `${data.id}-copy`}
     newStore.splice(index + 1, 0, newData);
     tableObject.updateBody(newStore);
+    const editButton = document.querySelector(`td[row-count="${rowNumber}"] .button-edit`);
+    editButton.click();
 }
 
 function deleteData(store, data, tableObject) {
@@ -144,4 +98,65 @@ function deleteData(store, data, tableObject) {
     tableObject.updateBody(newStore);
 }
 
-
+function createEmptyData() {
+    return {
+        id: "new-row",
+        characteristics: [
+            {
+                id: "weight",
+                min: null,
+                max: null,
+                eq: null,
+            },{
+                id: "length",
+                min: null,
+                max: null,
+                eq: null,
+            }
+        ],
+        rules: [
+            {
+                id: "inner_diameter",
+                min: null,
+                max: null,
+                eq: null,
+                grade: "premium"
+            },
+            {
+                id: "outer_diameter",
+                min: null,
+                max: null,
+                eq: null,
+                grade: "premium"
+            },
+            {
+                id: "inner_diameter",
+                min: null,
+                max: null,
+                eq: null,
+                grade: "secondary"
+            },
+            {
+                id: "outer_diameter",
+                min: null,
+                max: null,
+                eq: null,
+                grade: "secondary"
+            },
+            {
+                id: "inner_diameter",
+                min: null,
+                max: null,
+                eq: null,
+                grade: "reject"
+            },
+            {
+                id: "outer_diameter",
+                min: null,
+                max: null,
+                eq: null,
+                grade: "reject"
+            },
+        ]
+    }
+}
