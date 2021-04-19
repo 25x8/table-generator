@@ -14,11 +14,11 @@ document.body.onload = () => {
 
     const bodyRows = getBodyRows(data, table.getRowPattern());
     table.createBody(bodyRows);
-    table.setDataTransformator((newData) => getBodyRows(newData, table.getRowPattern()));
+    table.setDataTransformator((newData) => getBodyRows(newData, table.getRowPattern(), table));
 
     table.updateBody([
         {
-            id: "",
+            id: "42356",
             characteristics: [
                 {
                     id: "weight",
@@ -78,7 +78,7 @@ document.body.onload = () => {
             ]
         },
         {
-            id: "",
+            id: "11",
             characteristics: [
                 {
                     id: "weight",

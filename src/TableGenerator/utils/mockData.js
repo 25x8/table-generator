@@ -43,7 +43,7 @@ export const conf = {
 
 export const data = [
     {
-        id: "",
+        id: "data-1",
         characteristics: [
             {
                 id: "weight",

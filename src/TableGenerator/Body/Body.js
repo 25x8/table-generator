@@ -30,7 +30,11 @@ export class Body {
 
         row.forEach(cell => {
             const newCell = document.createElement('td');
-            newCell.textContent = cell;
+            if(typeof cell === 'function') {
+                cell(newCell);
+            } else {
+                newCell.textContent = cell;
+            }
             HTMLRow.appendChild(newCell);
         })
     }

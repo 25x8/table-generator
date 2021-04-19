@@ -1,3 +1,5 @@
+import {createCopyButton, createDeleteButton} from "./controlButtons";
+
 /* =======HEADER DATA======== */
 
 export function getHeaders(data) {
@@ -132,7 +134,7 @@ function setInputHeader(parentId, dict, measure) {
 
 /* =======BODY DATA======== */
 
-export function getBodyRows(data, rowsPattern) {
+export function getBodyRows(data, rowsPattern, tableObject) {
 
     const rows = [];
 
@@ -166,11 +168,14 @@ export function getBodyRows(data, rowsPattern) {
 
         });
 
-        row.push('control');
+        row.push((cell) => {
+            createCopyButton(cell, data, rowData, tableObject);
+            createDeleteButton(cell, data, rowData, tableObject);
+        });
 
         rows.push(row);
 
-    })
+    });
 
     return rows;
 }
