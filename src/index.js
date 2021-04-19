@@ -10,8 +10,6 @@ document.body.onload = () => {
         headerData: headerRows,
     });
 
-
-
     const bodyRows = getBodyRows(data, table.getRowPattern(), table);
     table.createBody(bodyRows);
     table.setDataTransformator((newData) => getBodyRows(newData, table.getRowPattern(), table));
