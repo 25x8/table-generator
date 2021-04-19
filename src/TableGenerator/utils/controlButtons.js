@@ -1,3 +1,6 @@
+import {saveData, deleteDataTable, editData} from "../../api/api";
+import regeneratorRuntime from "regenerator-runtime";
+
 export function createCopyButton(container, store, data, tableObject) {
     const button = document.createElement('button');
     button.classList.add('button-copy');
@@ -27,6 +30,7 @@ export function createEditButton(container, store, data, tableObject, rowPattern
     const editButton = document.createElement('button');
     editButton.classList.add('button-edit');
     editButton.textContent = 'Редактировать';
+    editButton.setAttribute('operation-type', 'edit');
     const index = store.findIndex(el => el.id === data.id);
     const editedData = {...store[index]};
     editedData.characteristics = store[index].characteristics.map(el => Object.assign({}, el))
@@ -45,11 +49,11 @@ export function createEditButton(container, store, data, tableObject, rowPattern
             cell.setAttribute('contenteditable', 'true');
             const dataType = rowPattern[index][0];
             let charType, editGroup;
-            if(dataType === 'characteristics') {
+            if (dataType === 'characteristics') {
                 charType = editedData[dataType];
                 editGroup = charType.filter(el => el.id === rowPattern[index][1])[0];
             } else {
-                 editGroup = editedData['rules'].filter(el => `${el.id}-${el.grade}` === rowPattern[index][1])[0];
+                editGroup = editedData['rules'].filter(el => `${el.id}-${el.grade}` === rowPattern[index][1])[0];
             }
 
             cell.oninput = (e) => {
@@ -59,13 +63,34 @@ export function createEditButton(container, store, data, tableObject, rowPattern
         });
 
         buttons.forEach(el => el.hidden = true);
-        saveButton.onclick = () => {
+        saveButton.onclick = async () => {
+            const type = editButton.getAttribute('operation-type');
+
 
             store[index] = {
                 ...editedData
             }
 
-            tableObject.updateBody(store);
+
+            if (type === 'add') {
+                try {
+                    await saveData(store);
+                    tableObject.updateBody(store);
+                    alert('Данные добавлены')
+                } catch (e) {
+                    alert('НЕ удалось добавить данные')
+                }
+            } else {
+                try {
+                    await editData(data.id, store);
+                    tableObject.updateBody(store);
+                    alert('Данные изменены')
+                } catch (e) {
+                    alert('НЕ удалось изменить данные')
+                }
+            }
+
+
         }
         container.removeChild(editButton);
         container.appendChild(saveButton);
@@ -79,6 +104,7 @@ function addData(tableObject) {
     tableObject.currentData.push(emptyData);
     tableObject.updateBody(tableObject.currentData);
     const editButton = document.querySelector(`td[row-count="${tableObject.body.rowCount}"] .button-edit`);
+    editButton.setAttribute('operation-type', 'add');
     editButton.click();
 }
 
@@ -90,14 +116,22 @@ function copyData(store, data, tableObject) {
     newStore.splice(index + 1, 0, newData);
     tableObject.updateBody(newStore);
     const editButton = document.querySelector(`td[row-count="${rowNumber}"] .button-edit`);
+    editButton.setAttribute('operation-type', 'add');
     editButton.click();
 }
 
-function deleteData(store, data, tableObject) {
+async function deleteData(store, data, tableObject) {
     const index = store.findIndex(el => el.id === data.id);
     const newStore = [...store];
-    newStore.splice(index, 1);
-    tableObject.updateBody(newStore);
+    try {
+        await deleteDataTable(data.id);
+        newStore.splice(index, 1);
+        tableObject.updateBody(newStore);
+        alert('Данные удалены')
+    } catch (e) {
+        alert('Ошибка удаления')
+    }
+
 }
 
 function createEmptyData() {
@@ -109,7 +143,7 @@ function createEmptyData() {
                 min: null,
                 max: null,
                 eq: null,
-            },{
+            }, {
                 id: "length",
                 min: null,
                 max: null,
