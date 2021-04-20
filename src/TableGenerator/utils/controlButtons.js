@@ -100,7 +100,7 @@ export function createEditButton(container, store, data, tableObject, rowPattern
 
 function addData(tableObject) {
     const emptyData = createEmptyData();
-    emptyData.id += '12' + Date.now();
+    emptyData.id += Date.now();
     tableObject.currentData.push(emptyData);
     tableObject.updateBody(tableObject.currentData);
     const editButton = document.querySelector(`td[row-count="${tableObject.body.rowCount}"] .button-edit`);

@@ -1,4 +1,5 @@
 import {createCopyButton, createDeleteButton, createEditButton} from "./controlButtons";
+import {ControlButtons} from "../ControlButtons/ControlButtons";
 
 /* =======HEADER DATA======== */
 
@@ -168,10 +169,23 @@ export function getBodyRows(data, rowsPattern, tableObject) {
 
         });
 
-        row.push((cell) => {
-            createCopyButton(cell, data, rowData, tableObject);
-            createDeleteButton(cell, data, rowData, tableObject);
-            createEditButton(cell, data, rowData, tableObject, rowsPattern)
+        row.push(({tr, cell}) => {
+            const controlButtons = new ControlButtons({
+                tableController: tableObject,
+                rowHTML: tr
+            });
+
+            controlButtons.createControlGroup({
+                cellHTML: cell,
+                id: rowData.id
+            })
+
+            return controlButtons;
+
+            //
+            // createCopyButton(cell, data, rowData, tableObject);
+            // createDeleteButton(cell, data, rowData, tableObject);
+            // createEditButton(cell, data, rowData, tableObject, rowsPattern)
         });
 
         rows.push(row);
