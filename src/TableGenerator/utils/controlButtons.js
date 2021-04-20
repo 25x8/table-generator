@@ -127,7 +127,7 @@ async function deleteData(store, data, tableObject) {
         await deleteDataTable(data.id);
         newStore.splice(index, 1);
         tableObject.updateBody(newStore);
-        alert('Данные удалены')
+        alert('Данные удалены');
     } catch (e) {
         alert('Ошибка удаления')
     }
