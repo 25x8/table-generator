@@ -25,7 +25,7 @@ export class TableGenerator {
 
     createTable() {
         this.HTMLTable = document.createElement('table');
-        this.HTMLTable.classList.add('table-main');
+        this.HTMLTable.className = 'table table-main';
         this.HTMLWrapper.appendChild(this.HTMLTable);
     }
 
@@ -47,13 +47,13 @@ export class TableGenerator {
         createAddButton(container, this.currentData, this)
     }
 
-    updateBody(newData) {
+    updateBody(newData, addFn) {
         this.currentData = newData;
         if(this.dataTransformator) {
             const transformedData = this.dataTransformator(newData);
-            this.body.updateBody(transformedData);
+            this.body.updateBody(transformedData, addFn);
         } else {
-            this.body.updateBody(newData);
+            this.body.updateBody(newData, addFn);
         }
     }
 

@@ -11,6 +11,7 @@ document.body.onload = () => {
     });
 
     const bodyRows = getBodyRows(data, table.getRowPattern(), table);
+    table.currentData = data;
     table.createBody(bodyRows);
     table.setDataTransformator((newData) => getBodyRows(newData, table.getRowPattern(), table));
     table.insertAddButton(document.querySelector('th[self-id="control"]'));

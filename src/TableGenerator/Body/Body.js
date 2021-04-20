@@ -1,3 +1,5 @@
+import {ControlButtons} from "../ControlButtons/ControlButtons";
+
 export class Body {
 
     HTMLBody;
@@ -13,18 +15,20 @@ export class Body {
         table.appendChild(this.HTMLBody);
     }
 
-    initRows(rows) {
+    initRows(rows, addFn) {
         this.rowCount = 0;
         const rowsArray = Object.values(rows);
 
         rowsArray.forEach((row, index) => {
-            this.addRow(row);
+            this.addRow(row, addFn);
         });
+
+
     }
 
 
 
-    addRow(row) {
+    addRow(row, addFn) {
         this.rowCount++;
         const HTMLRow = document.createElement('tr');
         HTMLRow.setAttribute('row-count', `${this.rowCount}`);
@@ -38,7 +42,13 @@ export class Body {
                 : newCell.setAttribute('data-cell', 'true')
 
             if (typeof cell === 'function') {
-                cell(newCell);
+               const controlButtons = cell({
+                    tr: HTMLRow,
+                    cell: newCell,
+                });
+
+
+                addFn && addFn(controlButtons);
             } else {
                 newCell.textContent = cell;
             }
@@ -46,9 +56,9 @@ export class Body {
         })
     }
 
-    updateBody(newRows) {
+    updateBody(newRows, addFn) {
         this.HTMLBody.innerHTML = '';
-        this.initRows(newRows)
+        this.initRows(newRows, addFn)
     }
 
 }
