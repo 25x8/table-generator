@@ -131,7 +131,6 @@ async function deleteData(store, data, tableObject) {
     } catch (e) {
         alert('Ошибка удаления')
     }
-
 }
 
 function createEmptyData() {
@@ -203,7 +202,7 @@ function createEmptyData() {
 // при двойном добавлении баг.
 // если не 200 - ошибка.
 // отправлять только строку.
-// адресса
+// адресса в window
 // прилепить хедер
 // ширина мин 30 пикселей
 
