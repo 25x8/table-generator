@@ -160,12 +160,12 @@ export function getBodyRows(data, rowsPattern, tableObject) {
             if (pattern[2] === 'measure') {
                 const measureCell = document.querySelector(`[parent-id="${pattern[1]}"][self-id="measure"]`)
                 cellData = measureCell.getAttribute('measure-val')
+                cellData = createSelect(cellData.split(','));
 
             } else {
                 cellData = dataObject[pattern[2]];
             }
             row.push(cellData)
-
 
         });
 
@@ -188,6 +188,24 @@ export function getBodyRows(data, rowsPattern, tableObject) {
     });
 
     return rows;
+}
+
+function createSelect(options) {
+    console.log(options)
+    const select = document.createElement("select");
+
+    options.forEach(el => {
+        const opt = document.createElement("option");
+
+        opt.value = el;
+        opt.text = el;
+
+        select.add(opt, null)
+
+        select.setAttribute('disabled', 'disabled');
+    })
+
+    return select
 }
 
 

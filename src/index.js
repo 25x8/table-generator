@@ -14,6 +14,6 @@ document.body.onload = () => {
     table.currentData = data;
     table.createBody(bodyRows);
     table.setDataTransformator((newData) => getBodyRows(newData, table.getRowPattern(), table));
-    table.insertAddButton(document.querySelector('th[self-id="control"]'));
+    table.insertAddButton(table.HTMLWrapper);
 
 }

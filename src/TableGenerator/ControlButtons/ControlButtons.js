@@ -1,3 +1,4 @@
+import './control-buttons.scss';
 import {deleteDataTable, editData, saveData} from "../../api/api";
 
 export class ControlButtons {
@@ -169,6 +170,11 @@ export class ControlButtons {
 
     setCellsEditable(editableData) {
         const rowCells = this.rowHTML.querySelectorAll('td[data-cell]');
+        const selectCell = this.rowHTML.querySelectorAll('select');
+
+        selectCell.forEach(select => {
+           select.removeAttribute('disabled');
+        })
 
         rowCells.forEach((cell, index) => {
             cell.setAttribute('contenteditable', 'true');
