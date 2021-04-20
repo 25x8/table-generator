@@ -215,7 +215,7 @@ export class ControlButtons {
     }
 
     static toggleDisableAllCopyButtons(disable) {
-        const buttons = document.querySelectorAll('.button-delete, .button-copy,  .button-edit');
+        const buttons = document.querySelectorAll('.button-add, .button-delete, .button-copy,  .button-edit');
         disable
             ? buttons.forEach(el => el.setAttribute('disabled', `${disable}`))
             : buttons.forEach(el => el.removeAttribute('disabled'))
