@@ -20,7 +20,7 @@ export class Body {
         const rowsArray = Object.values(rows);
 
         rowsArray.forEach((row, index) => {
-            this.addRow(row, addFn);
+            this.addRow(row, addFn, index, rowsArray.length - 1);
         });
 
 
@@ -28,7 +28,7 @@ export class Body {
 
 
 
-    addRow(row, addFn) {
+    addRow(row, addFn, rowCount, rowTotal) {
         this.rowCount++;
         const HTMLRow = document.createElement('tr');
         HTMLRow.setAttribute('row-count', `${this.rowCount}`);
@@ -48,7 +48,18 @@ export class Body {
                 });
 
 
-                addFn && addFn(controlButtons);
+               if(addFn) {
+                   if (rowCount === rowTotal  && addFn.index === -1) {
+                       addFn.fn(controlButtons);
+                   }
+
+                   if (addFn.index === rowCount) {
+
+                       addFn.fn(controlButtons);
+                   }
+               }
+
+
             } else {
                 newCell.textContent = cell;
             }

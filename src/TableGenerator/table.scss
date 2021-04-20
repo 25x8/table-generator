@@ -18,9 +18,15 @@
     text-align: center;
     min-width: 30px;
     padding: 0!important;
+
     &[contenteditable] {
       box-shadow: inset 0 0 4px 0 #cc1515;
       padding: 0.5rem!important;
+
+      &:empty:not(:focus):before{
+        content: "0";
+        color: #b68b8b;
+      }
     }
   }
 

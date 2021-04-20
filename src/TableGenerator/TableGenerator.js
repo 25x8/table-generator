@@ -2,6 +2,7 @@ import {Header} from "./Header/Header";
 import {Body} from "./Body/Body";
 import "./table.scss";
 import {createAddButton} from "./utils/controlButtons";
+import {ControlButtons} from "./ControlButtons/ControlButtons";
 
 export class TableGenerator {
     HTMLWrapper;
@@ -44,7 +45,10 @@ export class TableGenerator {
     }
 
     insertAddButton(container) {
-        createAddButton(container, this.currentData, this)
+        ControlButtons.createAddButton({
+            cellHTML: container,
+            tableController: this
+        })
     }
 
     updateBody(newData, addFn) {

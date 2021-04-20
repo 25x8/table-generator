@@ -8,7 +8,6 @@ export class ControlButtons {
     rowHTML;
 
     buttons = {
-        // copy: null,
         edit: null,
         delete: null,
         save: null
@@ -31,7 +30,7 @@ export class ControlButtons {
 
     createCopyButton({cellHTML, id}) {
 
-        this.buttons.copy = this.createButton({
+        this.buttons.copy = ControlButtons.createButton({
             className: 'button-copy',
             text: 'Копировать',
             click: () => {
@@ -44,14 +43,17 @@ export class ControlButtons {
     copyRow(id) {
         const {editedData, index} = this.selectDataForEdit(id);
         const newStore = [...this.store];
-        const newData = {...editedData, id: ''};
+        const newData = {...editedData, id: 'new-id'};
         newStore.splice(index + 1, 0, newData);
-        this.tableController.updateBody(newStore, (btnC) => this.setSaveButtonAddData(newData, btnC, index + 1));
+        this.tableController.updateBody(newStore, {
+            index: index + 1,
+            fn: (btnC) => ControlButtons.setSaveButtonAddData(newData, btnC, index + 1, newStore)
+        });
     }
 
-    createAddButton({cellHTML}) {
+    static createAddButton({cellHTML, tableController}) {
 
-        this.buttons.add = this.createButton(
+        const addButton = ControlButtons.createButton(
             {
                 className: 'button-add',
                 text: 'Добавить',
@@ -60,34 +62,37 @@ export class ControlButtons {
                     // this.setCellsEditable(editableData);
                     // this.toggleControlButtons(true);
                     // await this.setSaveButtonSaveEdits(id, editableData, index);
-                    this.createAddRow();
+                    ControlButtons.createAddRow(tableController);
                 }
             });
 
-        cellHTML.appendChild(this.buttons.add);
+        cellHTML.appendChild(addButton);
     }
 
-
-    createAddRow() {
-        const emptyData = this.createEmptyData();
-        emptyData.id = "";
-        this.tableController.currentData.push(emptyData);
-        this.tableController.updateBody(this.tableController.currentData, (btnC) => this.setSaveButtonAddData(emptyData, btnC, -1));
+    static createAddRow(tableController) {
+        const emptyData = ControlButtons.createEmptyData();
+        emptyData.id = "new-id";
+        tableController.currentData.push(emptyData);
+        tableController.updateBody(tableController.currentData, {
+            index: -1,
+            fn: (btnC) => ControlButtons.setSaveButtonAddData(emptyData, btnC, -1, tableController.currentData)
+        });
     }
 
-    setSaveButtonAddData(data, btnController, index) {
+    static setSaveButtonAddData(data, btnController, index, newStore) {
         btnController.toggleControlButtons(true);
+        btnController.setCellsEditable(data);
+        ControlButtons.toggleDisableAllCopyButtons(true);
         btnController.buttons.save.onclick = async () => {
             try {
                 await saveData(data);
-                alert('Данные изменены')
+                btnController.tableController.updateBody(newStore);
+                alert('Данные изменены');
             } catch (e) {
                 alert('НЕ удалось изменить данные');
                 btnController.store.splice(index, 1);
-                btnController.tableController.updateBody(this.store);
+                btnController.tableController.updateBody(btnController.store);
             }
-
-            btnController.toggleControlButtons(false);
             document.querySelector('.button-add').hidden = false;
         }
     }
@@ -95,14 +100,14 @@ export class ControlButtons {
     createEditButton({cellHTML, id}) {
         const {editedData, index} = this.selectDataForEdit(id);
 
-        this.buttons.edit = this.createButton(
+        this.buttons.edit = ControlButtons.createButton(
             {
                 className: 'button-edit',
                 text: 'Редактировать',
                 click: async () => {
                     this.setCellsEditable(editedData);
                     this.toggleControlButtons(true);
-                    this.toggleDisableAllCopyButtons(true);
+                    ControlButtons.toggleDisableAllCopyButtons(true);
                     await this.setSaveButtonSaveEdits(id, editedData, index);
                 }
             });
@@ -110,8 +115,8 @@ export class ControlButtons {
         cellHTML.appendChild(this.buttons.edit);
     }
 
-    createSaveButton({cellHTML, id}) {
-        this.buttons.save = this.createButton(
+    createSaveButton({cellHTML}) {
+        this.buttons.save = ControlButtons.createButton(
             {
                 className: 'button-save',
                 text: 'Сохранить',
@@ -138,7 +143,7 @@ export class ControlButtons {
             }
 
             this.toggleControlButtons(false);
-            this.toggleDisableAllCopyButtons(false);
+            ControlButtons.toggleDisableAllCopyButtons(false);
         }
 
     }
@@ -183,7 +188,7 @@ export class ControlButtons {
     }
 
     createDeleteButton({cellHTML, id}) {
-        const deleteButton = this.createButton({
+        const deleteButton = ControlButtons.createButton({
             className: 'button-delete',
             text: 'Удалить',
             click: () => this.deleteData(id)
@@ -194,7 +199,7 @@ export class ControlButtons {
         this.buttons.delete = deleteButton;
     }
 
-    createButton({className, text, click}) {
+    static createButton({className, text, click}) {
         const button = document.createElement('button');
         button.className = className;
         button.textContent = text;
@@ -203,7 +208,7 @@ export class ControlButtons {
         return button;
     }
 
-    toggleDisableAllCopyButtons(disable) {
+    static toggleDisableAllCopyButtons(disable) {
         const buttons = document.querySelectorAll('.button-delete, .button-copy,  .button-edit');
         disable
             ? buttons.forEach(el => el.setAttribute('disabled', `${disable}`))
@@ -227,7 +232,7 @@ export class ControlButtons {
         this.store = newStore;
     }
 
-    createEmptyData() {
+    static createEmptyData() {
         return {
             id: "new-row",
             characteristics: [

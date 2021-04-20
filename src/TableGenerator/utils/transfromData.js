@@ -181,11 +181,6 @@ export function getBodyRows(data, rowsPattern, tableObject) {
             })
 
             return controlButtons;
-
-            //
-            // createCopyButton(cell, data, rowData, tableObject);
-            // createDeleteButton(cell, data, rowData, tableObject);
-            // createEditButton(cell, data, rowData, tableObject, rowsPattern)
         });
 
         rows.push(row);
