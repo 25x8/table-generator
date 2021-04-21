@@ -15,13 +15,14 @@ export class ControlButtons {
     }
 
     static invisibleCells;
+    static invisibleButtons;
+    static invisibleSaveButton;
 
     constructor({tableController, rowHTML}) {
         this.tableController = tableController;
         this.rowPattern = tableController.getRowPattern();
         this.rowHTML = rowHTML;
         this.store = tableController.currentData;
-        ControlButtons.invisibleCells = document.querySelectorAll('.table-sticky td[data-cell]');
     }
 
     createControlGroup({cellHTML, id}) {
@@ -104,11 +105,15 @@ export class ControlButtons {
     static validateData(data) {
         let isValid = true;
         data.characteristics.forEach(el => {
-            isValid = this.checkValid(el)
+            !this.checkValid(el) && (isValid = false)
         });
 
+        if(!isValid) {
+            return false
+        }
+
         data.rules.forEach(el => {
-            isValid = this.checkValid(el);
+            !this.checkValid(el) && (isValid = false)
         })
 
         return isValid;
@@ -119,9 +124,6 @@ export class ControlButtons {
         (el.min === '' || el.min === 0) && (el.min = null);
         (el.max === '' || el.max === 0) && (el.max = null);
         (el.eq === '' || el.eq === 0) && (el.eq = null);
-        console.log(el.min)
-        console.log(el.max)
-        console.log(el.eq)
 
         if (el.max === null && el.min === null && el.eq === null) {
             return false
@@ -298,12 +300,22 @@ export class ControlButtons {
         this.store = newStore;
     }
 
+    static initializeInvisibleButtons() {
+        ControlButtons.invisibleCells = document.querySelectorAll('.table-sticky td[data-cell]');
+        ControlButtons.invisibleButtons = document.querySelectorAll('.table-sticky .button-edit, .table-sticky .button-delete, .table-sticky .button-add');
+        ControlButtons.invisibleSaveButton = document.querySelector('.table-sticky .button-save');
+    }
+
     static setHiddenCellsEdit() {
         ControlButtons.invisibleCells.forEach(cell => cell.setAttribute('contenteditable', 'true'));
+        ControlButtons.invisibleButtons.forEach(btn => btn.hidden = true);
+        ControlButtons.invisibleSaveButton.hidden = false;
     }
 
     static setHiddenCellsNotEdit() {
         ControlButtons.invisibleCells.forEach(cell => cell.removeAttribute('contenteditable'));
+        ControlButtons.invisibleButtons.forEach(btn => btn.hidden = false);
+        ControlButtons.invisibleSaveButton.hidden = true;
     }
 
     static createEmptyData() {

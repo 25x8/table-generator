@@ -17,7 +17,6 @@ export class TableGenerator {
         this.createTable();
         this.createFakeTable();
         this.createHeader(headerData);
-
     }
 
     createWrapper(container) {
@@ -59,6 +58,8 @@ export class TableGenerator {
             table: this.fakeTable,
             rows: bodyData
         })
+
+        ControlButtons.initializeInvisibleButtons();
     }
 
     insertAddButton(container) {
