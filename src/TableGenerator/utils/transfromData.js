@@ -191,7 +191,6 @@ export function getBodyRows(data, rowsPattern, tableObject) {
 }
 
 function createSelect(options) {
-    console.log(options)
     const select = document.createElement("select");
 
     options.forEach(el => {

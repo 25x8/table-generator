@@ -41,7 +41,6 @@ export class Body {
                 ? newCell.setAttribute('row-count', `${this.rowCount}`)
                 : newCell.setAttribute('data-cell', 'true')
 
-            console.log(typeof cell)
             if (typeof cell === 'function') {
                const controlButtons = cell({
                     tr: HTMLRow,

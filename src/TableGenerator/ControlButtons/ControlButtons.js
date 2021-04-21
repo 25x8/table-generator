@@ -59,10 +59,6 @@ export class ControlButtons {
                 className: 'button-add',
                 text: 'Добавить',
                 click: async () => {
-                    document.querySelector('.button-add').hidden = true;
-                    // this.setCellsEditable(editableData);
-                    // this.toggleControlButtons(true);
-                    // await this.setSaveButtonSaveEdits(id, editableData, index);
                     ControlButtons.createAddRow(tableController);
                 }
             });
@@ -85,17 +81,69 @@ export class ControlButtons {
         btnController.setCellsEditable(data);
         ControlButtons.toggleDisableAllCopyButtons(true);
         btnController.buttons.save.onclick = async () => {
-            try {
-                await saveData(data);
-                btnController.tableController.updateBody(newStore);
-                alert('Данные изменены');
-            } catch (e) {
-                alert('НЕ удалось изменить данные');
-                btnController.store.splice(index, 1);
-                btnController.tableController.updateBody(btnController.store);
+            if(ControlButtons.validateData(data)) {
+                try {
+                    await saveData(data);
+                    btnController.tableController.updateBody(newStore);
+                    alert('Данные изменены');
+                } catch (e) {
+                    alert('НЕ удалось изменить данные');
+                    btnController.store.splice(index, 1);
+                    btnController.tableController.updateBody(btnController.store);
+                }
+                document.querySelector('.button-add').removeAttribute('disabled');
+            } else {
+                alert('Данные введены не верно')
             }
-            document.querySelector('.button-add').hidden = false;
         }
+    }
+
+    static validateData(data) {
+        let isValid = true;
+        data.characteristics.forEach(el => {
+            isValid = this.checkValid(el)
+        });
+
+        data.rules.forEach(el => {
+            isValid = this.checkValid(el);
+        })
+
+        return isValid;
+    }
+
+    static checkValid(el) {
+
+        (el.min === '' || el.min === 0) && (el.min = null);
+        (el.max === '' || el.max === 0) && (el.max = null);
+        (el.eq === '' || el.eq === 0) && (el.eq = null);
+        console.log(el.min)
+        console.log(el.max)
+        console.log(el.eq)
+
+        if(el.max === null && el.min === null && el.eq === null) {
+            return  false
+        }
+
+
+        if(el.eq) {
+            if(el.min !== null || el.max !== null) {
+                return  false;
+            }
+        }
+
+        if(el.min) {
+            if(el.max && (el.min > el.max)) {
+                return  false;
+            }
+        }
+
+        if(el.max) {
+            if(el.min && (el.min > el.max)) {
+                return  false;
+            }
+        }
+
+        return true;
     }
 
     createEditButton({cellHTML, id}) {
@@ -188,7 +236,7 @@ export class ControlButtons {
             }
 
             cell.oninput = (e) => {
-                editGroup[this.rowPattern[index][2]] = e.target.textContent;
+                editGroup[this.rowPattern[index][2]] = Number(e.target.textContent);
             }
         })
     }
