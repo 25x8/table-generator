@@ -1,7 +1,6 @@
 import {Header} from "./Header/Header";
 import {Body} from "./Body/Body";
 import "./table.scss";
-import {createAddButton} from "./utils/controlButtons";
 import {ControlButtons} from "./ControlButtons/ControlButtons";
 
 export class TableGenerator {
@@ -11,11 +10,14 @@ export class TableGenerator {
     body;
     dataTransformator;
     currentData;
+    fakeTable;
 
     constructor({container, headerData}) {
         this.createWrapper(container);
         this.createTable();
+        this.createFakeTable();
         this.createHeader(headerData);
+
     }
 
     createWrapper(container) {
@@ -30,9 +32,19 @@ export class TableGenerator {
         this.HTMLWrapper.appendChild(this.HTMLTable);
     }
 
+    createFakeTable() {
+        this.fakeTable = document.createElement('table');
+        this.fakeTable.className = 'table table-main table-sticky';
+        this.HTMLWrapper.appendChild(this.fakeTable);
+    }
+
     createHeader(headerData) {
         this.header = new Header({
             table: this.HTMLTable,
+            rows: headerData
+        })
+        new Header({
+            table: this.fakeTable,
             rows: headerData
         })
     }
@@ -40,6 +52,11 @@ export class TableGenerator {
     createBody(bodyData) {
         this.body = new Body({
             table: this.HTMLTable,
+            rows: bodyData
+        })
+
+        new Body({
+            table: this.fakeTable,
             rows: bodyData
         })
     }

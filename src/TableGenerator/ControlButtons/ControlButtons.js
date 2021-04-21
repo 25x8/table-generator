@@ -14,17 +14,19 @@ export class ControlButtons {
         save: null
     }
 
+    static invisibleCells;
+
     constructor({tableController, rowHTML}) {
         this.tableController = tableController;
         this.rowPattern = tableController.getRowPattern();
         this.rowHTML = rowHTML;
         this.store = tableController.currentData;
+        ControlButtons.invisibleCells = document.querySelectorAll('.table-sticky td[data-cell]');
     }
 
     createControlGroup({cellHTML, id}) {
         this.createDeleteButton({cellHTML, id});
         this.createSaveButton({cellHTML, id});
-        // this.createAddButton({cellHTML, id});
         this.createEditButton({cellHTML, id});
         this.createCopyButton({cellHTML, id});
     }
@@ -81,10 +83,11 @@ export class ControlButtons {
         btnController.setCellsEditable(data);
         ControlButtons.toggleDisableAllCopyButtons(true);
         btnController.buttons.save.onclick = async () => {
-            if(ControlButtons.validateData(data)) {
+            if (ControlButtons.validateData(data)) {
                 try {
                     await saveData(data);
                     btnController.tableController.updateBody(newStore);
+                    ControlButtons.setHiddenCellsNotEdit();
                     alert('Данные изменены');
                 } catch (e) {
                     alert('НЕ удалось изменить данные');
@@ -120,26 +123,26 @@ export class ControlButtons {
         console.log(el.max)
         console.log(el.eq)
 
-        if(el.max === null && el.min === null && el.eq === null) {
-            return  false
+        if (el.max === null && el.min === null && el.eq === null) {
+            return false
         }
 
 
-        if(el.eq) {
-            if(el.min !== null || el.max !== null) {
-                return  false;
+        if (el.eq) {
+            if (el.min !== null || el.max !== null) {
+                return false;
             }
         }
 
-        if(el.min) {
-            if(el.max && (el.min > el.max)) {
-                return  false;
+        if (el.min) {
+            if (el.max && (el.min > el.max)) {
+                return false;
             }
         }
 
-        if(el.max) {
-            if(el.min && (el.min > el.max)) {
-                return  false;
+        if (el.max) {
+            if (el.min && (el.min > el.max)) {
+                return false;
             }
         }
 
@@ -179,20 +182,27 @@ export class ControlButtons {
 
     async setSaveButtonSaveEdits(id, data, index) {
         this.buttons.save.onclick = async () => {
-            try {
-                await editData(id, data);
-                this.store[index] = {
-                    ...data
-                }
-                this.tableController.updateBody(this.store);
-                alert('Данные изменены')
-            } catch (e) {
-                alert('НЕ удалось изменить данные');
-                this.tableController.updateBody(this.store);
-            }
+            if (ControlButtons.validateData(data)) {
+                try {
+                    await editData(id, data);
+                    this.store[index] = {
+                        ...data
+                    }
+                    ControlButtons.setHiddenCellsNotEdit();
+                    this.tableController.updateBody(this.store);
 
-            this.toggleControlButtons(false);
-            ControlButtons.toggleDisableAllCopyButtons(false);
+                    alert('Данные изменены')
+                } catch (e) {
+                    alert('НЕ удалось изменить данные');
+                    this.tableController.updateBody(this.store);
+                }
+
+
+                this.toggleControlButtons(false);
+                ControlButtons.toggleDisableAllCopyButtons(false);
+            } else {
+                alert('Данные введены неверно')
+            }
         }
 
     }
@@ -220,8 +230,10 @@ export class ControlButtons {
         const rowCells = this.rowHTML.querySelectorAll('td[data-cell]');
         const selectCell = this.rowHTML.querySelectorAll('select');
 
+        ControlButtons.setHiddenCellsEdit();
+
         selectCell.forEach(select => {
-           select.removeAttribute('disabled');
+            select.removeAttribute('disabled');
         })
 
         rowCells.forEach((cell, index) => {
@@ -284,6 +296,14 @@ export class ControlButtons {
 
     updateStore(newStore) {
         this.store = newStore;
+    }
+
+    static setHiddenCellsEdit() {
+        ControlButtons.invisibleCells.forEach(cell => cell.setAttribute('contenteditable', 'true'));
+    }
+
+    static setHiddenCellsNotEdit() {
+        ControlButtons.invisibleCells.forEach(cell => cell.removeAttribute('contenteditable'));
     }
 
     static createEmptyData() {
