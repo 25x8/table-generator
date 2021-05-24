@@ -1,4 +1,4 @@
-import {createCopyButton, createDeleteButton, createEditButton} from "./controlButtons";
+import regeneratorRuntime from "regenerator-runtime";
 import {ControlButtons} from "../ControlButtons/ControlButtons";
 
 /* =======HEADER DATA======== */

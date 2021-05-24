@@ -1,5 +1,3 @@
-import {ControlButtons} from "../ControlButtons/ControlButtons";
-
 export class Body {
 
     HTMLBody;
@@ -22,11 +20,7 @@ export class Body {
         rowsArray.forEach((row, index) => {
             this.addRow(row, addFn, index, rowsArray.length - 1);
         });
-
-
     }
-
-
 
     addRow(row, addFn, rowCount, rowTotal) {
         this.rowCount++;
@@ -36,29 +30,28 @@ export class Body {
 
         row.forEach((cell, index) => {
             const newCell = document.createElement('td');
+            newCell.setAttribute('cell-number', index)
             const lastCell = index === row.length - 1
             lastCell
                 ? newCell.setAttribute('row-count', `${this.rowCount}`)
                 : newCell.setAttribute('data-cell', 'true')
 
             if (typeof cell === 'function') {
+
                const controlButtons = cell({
                     tr: HTMLRow,
                     cell: newCell,
                 });
 
-
                if(addFn) {
-                   if (rowCount === rowTotal  && addFn.index === -1) {
+                   if (rowCount === rowTotal && addFn.index === -1) {
                        addFn.fn(controlButtons);
                    }
 
                    if (addFn.index === rowCount) {
-
                        addFn.fn(controlButtons);
                    }
                }
-
 
             } else {
                 if(cell instanceof HTMLElement) {

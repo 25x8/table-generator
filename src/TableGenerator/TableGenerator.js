@@ -42,6 +42,7 @@ export class TableGenerator {
             table: this.HTMLTable,
             rows: headerData
         })
+
         new Header({
             table: this.fakeTable,
             rows: headerData
@@ -60,6 +61,7 @@ export class TableGenerator {
         })
 
         ControlButtons.initializeInvisibleButtons();
+        ControlButtons.syncFakeTableRow();
     }
 
     insertAddButton(container) {
