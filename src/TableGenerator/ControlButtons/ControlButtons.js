@@ -90,7 +90,8 @@ export class ControlButtons {
             if (ControlButtons.validateData(data)) {
                 try {
                     const newId = await saveData(data);
-                    newStore[newStore.length - 1].id = newId ? newId : Date.now();
+                    console.log(index)
+                    newStore[index !== -1 ? index : newStore.length - 1].id = newId ? newId : Date.now();
                     btnController.tableController.updateBody(newStore);
                     ControlButtons.setHiddenCellsNotEdit();
                     alert('Данные изменены');
@@ -123,6 +124,7 @@ export class ControlButtons {
         })
 
         return isValid;
+
     }
 
     static checkValid(el) {
