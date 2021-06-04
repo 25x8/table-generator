@@ -129,32 +129,32 @@ export class ControlButtons {
 
     static checkValid(el) {
 
-        (el.min === '' || el.min === 0) && (el.min = null);
-        (el.max === '' || el.max === 0) && (el.max = null);
-        (el.eq === '' || el.eq === 0) && (el.eq = null);
-
-        if (el.max === null && el.min === null && el.eq === null) {
-            return false
-        }
-
-
-        if (el.eq) {
-            if (el.min !== null || el.max !== null) {
-                return false;
-            }
-        }
-
-        if (el.min) {
-            if (el.max && (el.min > el.max)) {
-                return false;
-            }
-        }
-
-        if (el.max) {
-            if (el.min && (el.min > el.max)) {
-                return false;
-            }
-        }
+        // (el.min === '' || el.min === 0) && (el.min = null);
+        // (el.max === '' || el.max === 0) && (el.max = null);
+        // (el.eq === '' || el.eq === 0) && (el.eq = null);
+        //
+        // if (el.max === null && el.min === null && el.eq === null) {
+        //     return false
+        // }
+        //
+        //
+        // if (el.eq) {
+        //     if (el.min !== null || el.max !== null) {
+        //         return false;
+        //     }
+        // }
+        //
+        // if (el.min) {
+        //     if (el.max && (el.min > el.max)) {
+        //         return false;
+        //     }
+        // }
+        //
+        // if (el.max) {
+        //     if (el.min && (el.min > el.max)) {
+        //         return false;
+        //     }
+        // }
 
         return true;
     }
@@ -407,3 +407,16 @@ export class ControlButtons {
     }
 
 }
+
+/// data tables
+/// если не dict - инпут
+/// если dict - селект
+/// если  mesure  - добавляется ЕИ, дефолтное если есть - устанавливаем
+/// conf, data, route -> blade(index)
+/// удаление object-object
+/// window.route create - строка // update - функция, в которую передаем id
+/// remove -> передаем id
+/// try catch в api
+/// const class с loading
+
+// вызываем -
