@@ -44,7 +44,6 @@ export class ControlButtons {
             }
         })
 
-        const icon = document.createElement('i');
         cellHTML.appendChild(this.buttons.copy);
     }
 
@@ -75,19 +74,22 @@ export class ControlButtons {
         btnController.setCellsEditable(data);
         ControlButtons.toggleDisableAllCopyButtons(true);
         btnController.buttons.save.onclick = async () => {
+            btnController.tableController.datatablesWrapper.destroy();
             if (validateData(data)) {
                 try {
                     const newId = await saveData(data);
                     newStore[index !== -1 ? index : newStore.length - 1].id = newId ? newId : Date.now();
                     btnController.tableController.updateBody(newStore);
+                    btnController.tableController.initDatatables();
                     alert('Данные изменены');
                 } catch (e) {
-                    alert('НЕ удалось изменить данные');
                     btnController.store.splice(index, 1);
                     btnController.tableController.updateBody(btnController.store);
+                    btnController.tableController.initDatatables();
+                    alert('НЕ удалось изменить данные');
                 }
                 // document.querySelector('.button-add').removeAttribute('disabled');
-                btnController.tableController.datatablesWrapper.clear().draw();
+
             } else {
                 alert('Данные введены не верно')
             }
