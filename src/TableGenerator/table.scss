@@ -2,6 +2,10 @@
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/tables";
 
+*{
+  box-sizing: border-box;
+}
+
 .table-wrapper {
   overflow-x: auto;
   position: relative;
@@ -16,9 +20,14 @@
     vertical-align: middle;
   }
 
+  &:not(.table-sticky)  {
+    td {
+      min-width: 30px;
+    }
+  }
+
   td {
     text-align: center;
-    min-width: 30px;
     padding: 0 !important;
 
     &[contenteditable] {

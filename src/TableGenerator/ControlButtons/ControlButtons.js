@@ -1,4 +1,5 @@
 import './control-buttons.scss';
+import 'bootstrap-icons/font/bootstrap-icons.css'
 import {deleteDataTable, editData, saveData} from "../../api/api";
 
 export class ControlButtons {
@@ -36,11 +37,13 @@ export class ControlButtons {
 
         this.buttons.copy = ControlButtons.createButton({
             className: 'button-copy',
-            text: 'Копировать',
+            html: '<i class="bi bi-back"></i>',
             click: () => {
                 this.copyRow(id);
             }
         })
+
+        const icon = document.createElement('i');
         cellHTML.appendChild(this.buttons.copy);
     }
 
@@ -60,7 +63,7 @@ export class ControlButtons {
         const addButton = ControlButtons.createButton(
             {
                 className: 'button-add',
-                text: 'Добавить',
+                html: '<i class="bi bi-plus-lg"></i>',
                 click: async () => {
                     ControlButtons.createAddRow(tableController);
                 }
@@ -86,7 +89,9 @@ export class ControlButtons {
         btnController.buttons.save.onclick = async () => {
             if (ControlButtons.validateData(data)) {
                 try {
-                    await saveData(data);
+                    const newId = await saveData(data);
+                    console.log(index)
+                    newStore[index !== -1 ? index : newStore.length - 1].id = newId ? newId : Date.now();
                     btnController.tableController.updateBody(newStore);
                     ControlButtons.setHiddenCellsNotEdit();
                     alert('Данные изменены');
@@ -99,6 +104,8 @@ export class ControlButtons {
             } else {
                 alert('Данные введены не верно')
             }
+
+            ControlButtons.syncFakeTableRow();
         }
     }
 
@@ -117,6 +124,7 @@ export class ControlButtons {
         })
 
         return isValid;
+
     }
 
     static checkValid(el) {
@@ -157,7 +165,7 @@ export class ControlButtons {
         this.buttons.edit = ControlButtons.createButton(
             {
                 className: 'button-edit',
-                text: 'Редактировать',
+                html: '<i class="bi bi-pencil-fill"></i>',
                 click: async () => {
                     this.setCellsEditable(editedData);
                     ControlButtons.setHiddenCellsEdit();
@@ -214,6 +222,7 @@ export class ControlButtons {
     toggleControlButtons(hidden) {
         Object.values(this.buttons).forEach(button => button.hidden = hidden);
         this.buttons.save.hidden = !hidden;
+
     }
 
     selectDataForEdit(id) {
@@ -250,6 +259,7 @@ export class ControlButtons {
 
             cell.oninput = (e) => {
                 editGroup[this.rowPattern[index][2]] = Number(e.target.textContent);
+                ControlButtons.syncFakeTableRow()
             }
         })
     }
@@ -257,7 +267,7 @@ export class ControlButtons {
     createDeleteButton({cellHTML, id}) {
         const deleteButton = ControlButtons.createButton({
             className: 'button-delete',
-            text: 'Удалить',
+            html: `<i class="bi bi-trash-fill"></i>`,
             click: () => this.deleteData(id)
         });
 
@@ -266,11 +276,12 @@ export class ControlButtons {
         this.buttons.delete = deleteButton;
     }
 
-    static createButton({className, text, click}) {
+    static createButton({className, text, click, html}) {
         const button = document.createElement('button');
         button.className = className;
         button.textContent = text;
         button.onclick = click;
+        html && button.insertAdjacentHTML('afterbegin', html)
 
         return button;
     }
@@ -280,6 +291,8 @@ export class ControlButtons {
         disable
             ? buttons.forEach(el => el.setAttribute('disabled', `${disable}`))
             : buttons.forEach(el => el.removeAttribute('disabled'))
+
+        ControlButtons.syncFakeTableRow();
 
     }
 
@@ -293,6 +306,8 @@ export class ControlButtons {
         } catch (e) {
             alert('Ошибка удаления')
         }
+
+        ControlButtons.syncFakeTableRow();
     }
 
     updateStore(newStore) {
@@ -378,6 +393,16 @@ export class ControlButtons {
                 },
             ]
         }
+    }
+
+
+    static syncFakeTableRow() {
+        const fakeRowCells = document.querySelectorAll(`.table-sticky td[cell-number]`);
+        const existRowCells = document.querySelectorAll('table:not(.table-sticky) tr[row-count="1"] td')
+        existRowCells.forEach((cell, index) => {
+            fakeRowCells[index].style.minWidth = cell.offsetWidth + 'px';
+            fakeRowCells[index].style.maxWidth = cell.offsetWidth + 'px';
+        })
     }
 
 }
