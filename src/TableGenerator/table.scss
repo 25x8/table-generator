@@ -42,22 +42,3 @@
   }
 }
 
-.table-main:not(.table-sticky) {
-  position: absolute;
-  thead {
-    visibility: hidden;
-  }
-}
-
-.table-sticky {
-  position: sticky;
-  top: 0;
-  pointer-events: none;
-
-  thead {
-    background: #fff;
-  }
-  tbody {
-    visibility: hidden;
-  }
-}

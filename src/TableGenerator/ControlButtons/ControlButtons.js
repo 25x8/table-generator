@@ -90,10 +90,8 @@ export class ControlButtons {
             if (ControlButtons.validateData(data)) {
                 try {
                     const newId = await saveData(data);
-                    console.log(index)
                     newStore[index !== -1 ? index : newStore.length - 1].id = newId ? newId : Date.now();
                     btnController.tableController.updateBody(newStore);
-                    ControlButtons.setHiddenCellsNotEdit();
                     alert('Данные изменены');
                 } catch (e) {
                     alert('НЕ удалось изменить данные');
@@ -105,7 +103,7 @@ export class ControlButtons {
                 alert('Данные введены не верно')
             }
 
-            ControlButtons.syncFakeTableRow();
+
         }
     }
 
@@ -168,7 +166,6 @@ export class ControlButtons {
                 html: '<i class="bi bi-pencil-fill"></i>',
                 click: async () => {
                     this.setCellsEditable(editedData);
-                    ControlButtons.setHiddenCellsEdit();
                     this.toggleControlButtons(true);
                     ControlButtons.toggleDisableAllCopyButtons(true);
                     await this.setSaveButtonSaveEdits(id, editedData, index);
@@ -199,7 +196,6 @@ export class ControlButtons {
                     this.store[index] = {
                         ...data
                     }
-                    ControlButtons.setHiddenCellsNotEdit();
                     this.tableController.updateBody(this.store);
 
                     alert('Данные изменены')
@@ -259,7 +255,6 @@ export class ControlButtons {
 
             cell.oninput = (e) => {
                 editGroup[this.rowPattern[index][2]] = Number(e.target.textContent);
-                ControlButtons.syncFakeTableRow()
             }
         })
     }
@@ -292,7 +287,6 @@ export class ControlButtons {
             ? buttons.forEach(el => el.setAttribute('disabled', `${disable}`))
             : buttons.forEach(el => el.removeAttribute('disabled'))
 
-        ControlButtons.syncFakeTableRow();
 
     }
 
@@ -307,29 +301,11 @@ export class ControlButtons {
             alert('Ошибка удаления')
         }
 
-        ControlButtons.syncFakeTableRow();
+
     }
 
     updateStore(newStore) {
         this.store = newStore;
-    }
-
-    static initializeInvisibleButtons() {
-        ControlButtons.invisibleCells = document.querySelectorAll('.table-sticky td[data-cell]');
-        ControlButtons.invisibleButtons = document.querySelectorAll('.table-sticky .button-edit, .table-sticky .button-delete, .table-sticky .button-add');
-        ControlButtons.invisibleSaveButton = document.querySelector('.table-sticky .button-save');
-    }
-
-    static setHiddenCellsEdit() {
-        ControlButtons.invisibleCells.forEach(cell => cell.setAttribute('contenteditable', 'true'));
-        ControlButtons.invisibleButtons.forEach(btn => btn.hidden = true);
-        ControlButtons.invisibleSaveButton.hidden = false;
-    }
-
-    static setHiddenCellsNotEdit() {
-        ControlButtons.invisibleCells.forEach(cell => cell.removeAttribute('contenteditable'));
-        ControlButtons.invisibleButtons.forEach(btn => btn.hidden = false);
-        ControlButtons.invisibleSaveButton.hidden = true;
     }
 
     static createEmptyData() {
@@ -395,14 +371,5 @@ export class ControlButtons {
         }
     }
 
-
-    static syncFakeTableRow() {
-        const fakeRowCells = document.querySelectorAll(`.table-sticky td[cell-number]`);
-        const existRowCells = document.querySelectorAll('table:not(.table-sticky) tr[row-count="1"] td')
-        existRowCells.forEach((cell, index) => {
-            fakeRowCells[index].style.minWidth = cell.offsetWidth + 'px';
-            fakeRowCells[index].style.maxWidth = cell.offsetWidth + 'px';
-        })
-    }
 
 }

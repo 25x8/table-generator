@@ -15,7 +15,6 @@ export class TableGenerator {
     constructor({container, headerData}) {
         this.createWrapper(container);
         this.createTable();
-        this.createFakeTable();
         this.createHeader(headerData);
     }
 
@@ -31,11 +30,6 @@ export class TableGenerator {
         this.HTMLWrapper.appendChild(this.HTMLTable);
     }
 
-    createFakeTable() {
-        this.fakeTable = document.createElement('table');
-        this.fakeTable.className = 'table table-main table-sticky';
-        this.HTMLWrapper.appendChild(this.fakeTable);
-    }
 
     createHeader(headerData) {
         this.header = new Header({
@@ -43,10 +37,6 @@ export class TableGenerator {
             rows: headerData
         })
 
-        new Header({
-            table: this.fakeTable,
-            rows: headerData
-        })
     }
 
     createBody(bodyData) {
@@ -55,13 +45,6 @@ export class TableGenerator {
             rows: bodyData
         })
 
-        new Body({
-            table: this.fakeTable,
-            rows: bodyData
-        })
-
-        ControlButtons.initializeInvisibleButtons();
-        ControlButtons.syncFakeTableRow();
     }
 
     insertAddButton(container) {
@@ -87,5 +70,9 @@ export class TableGenerator {
 
     setDataTransformator(fn) {
         this.dataTransformator = fn;
+    }
+
+    initDatatables() {
+
     }
 }
