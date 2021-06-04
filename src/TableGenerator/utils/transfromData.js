@@ -178,7 +178,7 @@ export function getBodyRows(data, rowsPattern, tableObject) {
             controlButtons.createControlGroup({
                 cellHTML: cell,
                 id: rowData.id
-            })
+            });
 
             return controlButtons;
         });
@@ -199,7 +199,7 @@ function createSelect(options) {
         opt.value = el;
         opt.text = el;
 
-        select.add(opt, null)
+        select.add(opt, null);
 
         select.setAttribute('disabled', 'disabled');
     })

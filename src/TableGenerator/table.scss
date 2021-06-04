@@ -1,6 +1,6 @@
-@import "~bootstrap/scss/bootstrap-utilities";
-@import "~bootstrap/scss/variables";
-@import "~bootstrap/scss/tables";
+//@import "~bootstrap/scss/bootstrap-utilities";
+//@import "~bootstrap/scss/variables";
+//@import "~bootstrap/scss/tables";
 
 *{
   box-sizing: border-box;
@@ -20,11 +20,6 @@
     vertical-align: middle;
   }
 
-  &:not(.table-sticky)  {
-    td {
-      min-width: 30px;
-    }
-  }
 
   td {
     text-align: center;

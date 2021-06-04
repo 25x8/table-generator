@@ -1,6 +1,7 @@
 import './control-buttons.scss';
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import {deleteDataTable, editData, saveData} from "../../api/api";
+import {validateData} from "./validation";
 
 export class ControlButtons {
 
@@ -87,7 +88,7 @@ export class ControlButtons {
         btnController.setCellsEditable(data);
         ControlButtons.toggleDisableAllCopyButtons(true);
         btnController.buttons.save.onclick = async () => {
-            if (ControlButtons.validateData(data)) {
+            if (validateData(data)) {
                 try {
                     const newId = await saveData(data);
                     newStore[index !== -1 ? index : newStore.length - 1].id = newId ? newId : Date.now();
@@ -105,56 +106,6 @@ export class ControlButtons {
 
 
         }
-    }
-
-    static validateData(data) {
-        let isValid = true;
-        data.characteristics.forEach(el => {
-            !this.checkValid(el) && (isValid = false)
-        });
-
-        if(!isValid) {
-            return false
-        }
-
-        data.rules.forEach(el => {
-            !this.checkValid(el) && (isValid = false)
-        })
-
-        return isValid;
-
-    }
-
-    static checkValid(el) {
-
-        (el.min === '' || el.min === 0) && (el.min = null);
-        (el.max === '' || el.max === 0) && (el.max = null);
-        (el.eq === '' || el.eq === 0) && (el.eq = null);
-
-        if (el.max === null && el.min === null && el.eq === null) {
-            return false
-        }
-
-
-        if (el.eq) {
-            if (el.min !== null || el.max !== null) {
-                return false;
-            }
-        }
-
-        if (el.min) {
-            if (el.max && (el.min > el.max)) {
-                return false;
-            }
-        }
-
-        if (el.max) {
-            if (el.min && (el.min > el.max)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     createEditButton({cellHTML, id}) {
@@ -190,7 +141,7 @@ export class ControlButtons {
 
     async setSaveButtonSaveEdits(id, data, index) {
         this.buttons.save.onclick = async () => {
-            if (ControlButtons.validateData(data)) {
+            if (validateData(data)) {
                 try {
                     await editData(id, data);
                     this.store[index] = {
