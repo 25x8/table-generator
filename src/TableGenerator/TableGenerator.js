@@ -14,11 +14,12 @@ import 'datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css';
 export class TableGenerator {
     HTMLWrapper;
     HTMLTable;
+    datatablesWrapper;
     header;
     body;
     dataTransformator;
     currentData;
-    fakeTable;
+
 
     constructor({container, headerData}) {
         this.createWrapper(container);
@@ -39,7 +40,6 @@ export class TableGenerator {
         this.HTMLWrapper.appendChild(this.HTMLTable);
     }
 
-
     createHeader(headerData) {
         this.header = new Header({
             table: this.HTMLTable,
@@ -53,14 +53,6 @@ export class TableGenerator {
             table: this.HTMLTable,
             rows: bodyData
         })
-
-    }
-
-    insertAddButton(container) {
-
-        this.initDatatables()
-
-
     }
 
     updateBody(newData, addFn) {
@@ -84,7 +76,7 @@ export class TableGenerator {
     initDatatables() {
 
         const tableController = this;
-        $(this.HTMLTable).DataTable({
+        this.datatablesWrapper = $(this.HTMLTable).DataTable({
             dom: 'lBfrtip',
             fixedHeader: true,
             order: [1, 'asc'],
@@ -92,7 +84,6 @@ export class TableGenerator {
                 {
                     text: '<i class="bi bi-plus-lg"></i>',
                     action: function ( e, dt, node, config ) {
-                        console.log(this)
                         ControlButtons.createAddRow(tableController);
                     }
                 }

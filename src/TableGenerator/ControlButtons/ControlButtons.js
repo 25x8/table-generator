@@ -59,19 +59,6 @@ export class ControlButtons {
         });
     }
 
-    static createAddButton({cellHTML, tableController}) {
-
-        const addButton = ControlButtons.createButton(
-            {
-                className: 'button-add',
-                html: '<i class="bi bi-plus-lg"></i>',
-                click: async () => {
-                    ControlButtons.createAddRow(tableController);
-                }
-            });
-
-        cellHTML.appendChild(addButton);
-    }
 
     static createAddRow(tableController) {
         const emptyData = ControlButtons.createEmptyData();
@@ -99,7 +86,8 @@ export class ControlButtons {
                     btnController.store.splice(index, 1);
                     btnController.tableController.updateBody(btnController.store);
                 }
-                document.querySelector('.button-add').removeAttribute('disabled');
+                // document.querySelector('.button-add').removeAttribute('disabled');
+                btnController.tableController.datatablesWrapper.clear().draw();
             } else {
                 alert('Данные введены не верно')
             }
