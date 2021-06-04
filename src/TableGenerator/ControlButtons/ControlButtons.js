@@ -160,6 +160,7 @@ export class ControlButtons {
                 text: 'Редактировать',
                 click: async () => {
                     this.setCellsEditable(editedData);
+                    ControlButtons.setHiddenCellsEdit();
                     this.toggleControlButtons(true);
                     ControlButtons.toggleDisableAllCopyButtons(true);
                     await this.setSaveButtonSaveEdits(id, editedData, index);
@@ -231,8 +232,6 @@ export class ControlButtons {
     setCellsEditable(editableData) {
         const rowCells = this.rowHTML.querySelectorAll('td[data-cell]');
         const selectCell = this.rowHTML.querySelectorAll('select');
-
-        ControlButtons.setHiddenCellsEdit();
 
         selectCell.forEach(select => {
             select.removeAttribute('disabled');
