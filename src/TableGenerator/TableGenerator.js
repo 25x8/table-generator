@@ -1,21 +1,29 @@
 import {Header} from "./Header/Header";
 import {Body} from "./Body/Body";
-import "./table.scss";
+// import "./table.scss";
 import {ControlButtons} from "./ControlButtons/ControlButtons";
+
+
+import 'datatables.net/js/jquery.dataTables.min';
+import 'datatables.net-buttons/js/dataTables.buttons.min';
+import 'datatables.net-dt/css/jquery.dataTables.min.css';
+import 'datatables.net-buttons-dt/css/buttons.dataTables.min.css';
+import 'datatables.net-fixedheader/js/dataTables.fixedHeader.min';
+import 'datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css';
 
 export class TableGenerator {
     HTMLWrapper;
     HTMLTable;
+    datatablesWrapper;
     header;
     body;
     dataTransformator;
     currentData;
-    fakeTable;
+
 
     constructor({container, headerData}) {
         this.createWrapper(container);
         this.createTable();
-        this.createFakeTable();
         this.createHeader(headerData);
     }
 
@@ -28,13 +36,8 @@ export class TableGenerator {
     createTable() {
         this.HTMLTable = document.createElement('table');
         this.HTMLTable.className = 'table table-main';
+        this.HTMLTable.setAttribute('width', '100%');
         this.HTMLWrapper.appendChild(this.HTMLTable);
-    }
-
-    createFakeTable() {
-        this.fakeTable = document.createElement('table');
-        this.fakeTable.className = 'table table-main table-sticky';
-        this.HTMLWrapper.appendChild(this.fakeTable);
     }
 
     createHeader(headerData) {
@@ -43,31 +46,12 @@ export class TableGenerator {
             rows: headerData
         })
 
-        new Header({
-            table: this.fakeTable,
-            rows: headerData
-        })
     }
 
     createBody(bodyData) {
         this.body = new Body({
             table: this.HTMLTable,
             rows: bodyData
-        })
-
-        new Body({
-            table: this.fakeTable,
-            rows: bodyData
-        })
-
-        ControlButtons.initializeInvisibleButtons();
-        ControlButtons.syncFakeTableRow();
-    }
-
-    insertAddButton(container) {
-        ControlButtons.createAddButton({
-            cellHTML: container,
-            tableController: this
         })
     }
 
@@ -87,5 +71,23 @@ export class TableGenerator {
 
     setDataTransformator(fn) {
         this.dataTransformator = fn;
+    }
+
+    initDatatables() {
+
+        const tableController = this;
+        this.datatablesWrapper = $(this.HTMLTable).DataTable({
+            dom: 'lBfrtip',
+            fixedHeader: true,
+            order: [1, 'asc'],
+            buttons: [
+                {
+                    text: '<i class="bi bi-plus-lg"></i>',
+                    action: function ( e, dt, node, config ) {
+                        ControlButtons.createAddRow(tableController);
+                    }
+                }
+            ]
+        })
     }
 }
