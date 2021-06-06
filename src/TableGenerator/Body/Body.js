@@ -1,3 +1,6 @@
+import 'select2/dist/js/select2.full.min';
+import 'select2/dist/css/select2.min.css';
+
 export class Body {
 
     HTMLBody;
@@ -55,7 +58,8 @@ export class Body {
 
             } else {
                 if(cell instanceof HTMLElement) {
-                    newCell.append(cell)
+                    newCell.append(cell);
+                    $(cell).select2();
                 } else {
                     newCell.textContent = cell;
                 }

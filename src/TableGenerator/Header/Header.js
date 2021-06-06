@@ -35,9 +35,14 @@ export class Header {
             el.rowspan && newCell.setAttribute('rowspan', el.rowspan);
 
             if(el.measureVal) {
+                let idList = '';
                 let valList = '';
-                el.measureVal.forEach(val => valList += `${val.value},`);
+                el.measureVal.forEach(val => {
+                    idList += `${val.id},`
+                    valList += `${val.value},`
+                });
                 newCell.setAttribute('measure-val', valList);
+                newCell.setAttribute('measure-id', idList);
             }
 
             newCell.setAttribute('self-id', el.id);

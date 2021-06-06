@@ -6,19 +6,15 @@ async function getResource(url, init = {}) {
         'Content-Type': 'application/json'
     })
 
-    const res = await fetch(`${BASE_URL}${url}`, init);
 
-    if (!res.ok) {
-        return {
-            status: res.status
-        };
+    try {
+        const res = await fetch(`${BASE_URL}${url}`, init);
+        return await res.json();
+    } catch (e) {
+        alert('Ошибка изменения данных')
     }
 
-    if(res.status === 204) {
-        return {success: 'success'}
-    }
 
-    return await res.json();
 }
 
 
@@ -27,7 +23,7 @@ export async function saveData(data) {
         method: 'POST',
         body: JSON.stringify(data)
     }
-    return await getResource(`/api/data`, init);
+    return await getResource(window.save, init);
 }
 
 export async function editData(id, data) {
@@ -35,12 +31,12 @@ export async function editData(id, data) {
         method: 'POST',
         body: JSON.stringify(data)
     }
-    return await getResource(`/api/data/${id}`, init);
+    return await getResource(`${window.edit}/${id}`, init);
 }
 
 export async function deleteDataTable(id) {
     const init = {
         method: 'DELETE'
     }
-    return await getResource(`/api/data/${id}`, init);
+    return await getResource(`${window.delete}/${id}`, init);
 }

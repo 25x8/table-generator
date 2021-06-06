@@ -1,6 +1,7 @@
 import regeneratorRuntime from "regenerator-runtime";
 import {ControlButtons} from "../ControlButtons/ControlButtons";
 
+
 /* =======HEADER DATA======== */
 
 export function getHeaders(data) {
@@ -160,7 +161,11 @@ export function getBodyRows(data, rowsPattern, tableObject) {
             if (pattern[2] === 'measure') {
                 const measureCell = document.querySelector(`[parent-id="${pattern[1]}"][self-id="measure"]`)
                 cellData = measureCell.getAttribute('measure-val')
-                cellData = createSelect(cellData.split(','));
+                cellData = createSelect(
+                    cellData.split(','),
+                    measureCell.getAttribute('measure-id').split(','),
+                    dataObject['measure']
+                );
 
             } else {
                 cellData = dataObject[pattern[2]];
@@ -190,19 +195,21 @@ export function getBodyRows(data, rowsPattern, tableObject) {
     return rows;
 }
 
-function createSelect(options) {
+function createSelect(options, idList, measure) {
     const select = document.createElement("select");
 
-    options.forEach(el => {
+    options.forEach((el, index) => {
         const opt = document.createElement("option");
 
-        opt.value = el;
+        opt.value = el === '' ? -1 : idList[index];
         opt.text = el;
 
         select.add(opt, null);
 
+        +opt.value === +measure && opt.setAttribute('selected', 'selected')
         select.setAttribute('disabled', 'disabled');
     })
+
 
     return select
 }

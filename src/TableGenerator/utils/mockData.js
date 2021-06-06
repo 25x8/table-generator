@@ -4,12 +4,12 @@ export const conf = {
             id: "weight",
             label: "Вес",
             dict: false,
-            measure: [ {id: "sm", value: "см"}]
+            measure: [ {id: 0, value: "см"}]
         },{
             id: "length",
             label: "Длина",
             dict: false,
-            measure: [ {id: "sm", value: "см"}]
+            measure: [ {id: 0, value: "см"}, {id: 1, value: 'm'}]
         }
     ],
     inputs: [
@@ -50,11 +50,13 @@ export const data = [
                 min: null,
                 max: null,
                 eq: null,
+                measure: 0
             },{
                 id: "length",
                 min: null,
                 max: null,
                 eq: null,
+                measure: 1
             }
         ],
         rules: [ //!отфильтровано по классам

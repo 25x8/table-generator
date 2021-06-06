@@ -83,7 +83,7 @@ export class TableGenerator {
             buttons: [
                 {
                     text: '<i class="bi bi-plus-lg"></i>',
-                    action: function ( e, dt, node, config ) {
+                    action: function () {
                         ControlButtons.createAddRow(tableController);
                     }
                 }

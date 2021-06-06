@@ -178,23 +178,35 @@ export class ControlButtons {
         const rowCells = this.rowHTML.querySelectorAll('td[data-cell]');
         const selectCell = this.rowHTML.querySelectorAll('select');
 
-        selectCell.forEach(select => {
+        selectCell.forEach((select, index) => {
             select.removeAttribute('disabled');
+
         })
 
         rowCells.forEach((cell, index) => {
+
+            !cell.querySelector('select') &&
             cell.setAttribute('contenteditable', 'true');
+
             const dataType = this.rowPattern[index][0];
+
             let charType, editGroup;
             if (dataType === 'characteristics') {
                 charType = editableData[dataType];
                 editGroup = charType.filter(el => el.id === this.rowPattern[index][1])[0];
+
             } else {
                 editGroup = editableData['rules'].filter(el => `${el.id}-${el.grade}` === this.rowPattern[index][1])[0];
             }
 
             cell.oninput = (e) => {
                 editGroup[this.rowPattern[index][2]] = Number(e.target.textContent);
+                if(e.target.tagName === 'SELECT') {
+                    $(e.target).on('select2:select',  () => {
+                        editGroup[this.rowPattern[index][2]] = $(e.target).val()
+                    });
+                }
+
             }
         })
     }
@@ -231,6 +243,7 @@ export class ControlButtons {
     }
 
     async deleteData(id) {
+        console.log(id)
         const index = this.store.findIndex(el => el.id === id);
         try {
             await deleteDataTable(id);
@@ -257,11 +270,13 @@ export class ControlButtons {
                     min: null,
                     max: null,
                     eq: null,
+                    measure: 0
                 }, {
                     id: "length",
                     min: null,
                     max: null,
                     eq: null,
+                    measure: 0
                 }
             ],
             rules: [
@@ -311,28 +326,17 @@ export class ControlButtons {
         }
     }
 
-
-
-    static syncFakeTableRow() {
-        const fakeRowCells = document.querySelectorAll(`.table-sticky td[cell-number]`);
-        const existRowCells = document.querySelectorAll('table:not(.table-sticky) tr[row-count="1"] td')
-        existRowCells.forEach((cell, index) => {
-            fakeRowCells[index].style.minWidth = cell.offsetWidth + 'px';
-            fakeRowCells[index].style.maxWidth = cell.offsetWidth + 'px';
-        })
-    }
-
 }
 
-/// data tables
+/// data tables +
 /// если не dict - инпут
 /// если dict - селект
-/// если  mesure  - добавляется ЕИ, дефолтное если есть - устанавливаем
+/// если  mesure  - добавляется ЕИ, дефолтное если есть - устанавливаем +
 /// conf, data, route -> blade(index)
-/// удаление object-object
+/// удаление object-object +
 /// window.route create - строка // update - функция, в которую передаем id
 /// remove -> передаем id
-/// try catch в api
+/// try catch в api+
 /// const class с loading
 
 // вызываем -
