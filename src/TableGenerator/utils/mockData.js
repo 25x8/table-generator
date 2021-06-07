@@ -16,12 +16,13 @@ export const conf = {
         {
             id: "inner_diameter",
             label: "Внутренний диаметр",
-            dict: true
+            dict: true,
+            options: [{id: 0, value: 25}, {id: 1, value: 50}, {id: 2, value: 100}]
         },
         {
             id: "outer_diameter",
             label: "Внешний диаметр",
-            dict: true
+            dict: false,
         }
     ],
     grades: [

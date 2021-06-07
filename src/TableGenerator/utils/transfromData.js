@@ -47,8 +47,7 @@ function setInputsRows(inputs, grades) {
         let colspanFirstRow = 0;
 
         inputs.forEach(input => {
-
-            const colspan = input.dict ? 3 : 4
+            const colspan = !input.measure ? 3 : 4
             colspanFirstRow += colspan;
 
             secondRow.push({
@@ -83,7 +82,7 @@ function setCharacteristicRow(data) {
 
     data.forEach(({label, id, dict, measure}) => {
 
-        const colspan = dict ? 3 : 4
+        const colspan = !measure ? 3 : 4
 
         colspanFirstRow += colspan
 
@@ -106,6 +105,7 @@ function setCharacteristicRow(data) {
 }
 
 function setInputHeader(parentId, dict, measure) {
+
     const defaultInput = [
         {
             parentId,
@@ -124,7 +124,7 @@ function setInputHeader(parentId, dict, measure) {
         }
     ];
 
-    !dict && defaultInput.push({
+    measure && defaultInput.push({
         parentId,
         id: `measure`,
         label: 'ЕИ',

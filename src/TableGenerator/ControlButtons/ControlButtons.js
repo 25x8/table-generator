@@ -16,9 +16,6 @@ export class ControlButtons {
         save: null
     }
 
-    static invisibleCells;
-    static invisibleButtons;
-    static invisibleSaveButton;
 
     constructor({tableController, rowHTML}) {
         this.tableController = tableController;
@@ -332,7 +329,7 @@ export class ControlButtons {
 /// если не dict - инпут
 /// если dict - селект
 /// если  mesure  - добавляется ЕИ, дефолтное если есть - устанавливаем +
-/// conf, data, route -> blade(index)
+/// conf, data, route -> blade(index) +
 /// удаление object-object +
 /// window.route create - строка // update - функция, в которую передаем id
 /// remove -> передаем id
