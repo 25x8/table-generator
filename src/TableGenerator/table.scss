@@ -2,38 +2,6 @@
 //@import "~bootstrap/scss/variables";
 //@import "~bootstrap/scss/tables";
 
-*{
-  box-sizing: border-box;
-}
-
-.table-wrapper {
-  overflow-x: auto;
-  position: relative;
-  height: 500px;
-}
-
-.table-main {
-  border-collapse: collapse;
-
-  th, td {
-    border: 1px solid black;
-    vertical-align: middle;
-  }
 
 
-  td {
-    text-align: center;
-    padding: 0 !important;
-
-    &[contenteditable] {
-      box-shadow: inset 0 0 4px 0 #cc1515;
-      padding: 0.5rem !important;
-
-      &:empty:not(:focus):before {
-        content: "0";
-        color: #b68b8b;
-      }
-    }
-  }
-}
 

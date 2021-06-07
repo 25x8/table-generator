@@ -85,9 +85,10 @@ export class ControlButtons {
                     btnController.tableController.initDatatables();
                     alert('НЕ удалось изменить данные');
                 }
-                // document.querySelector('.button-add').removeAttribute('disabled');
-
             } else {
+                btnController.store.splice(index, 1);
+                btnController.tableController.updateBody(btnController.store);
+                btnController.tableController.initDatatables();
                 alert('Данные введены не верно')
             }
 
@@ -127,6 +128,7 @@ export class ControlButtons {
 
     async setSaveButtonSaveEdits(id, data, index) {
         this.buttons.save.onclick = async () => {
+            this.tableController.datatablesWrapper.destroy();
             if (validateData(data)) {
                 try {
                     await editData(id, data);
@@ -134,17 +136,19 @@ export class ControlButtons {
                         ...data
                     }
                     this.tableController.updateBody(this.store);
-
+                    this.tableController.initDatatables();
                     alert('Данные изменены')
                 } catch (e) {
-                    alert('НЕ удалось изменить данные');
                     this.tableController.updateBody(this.store);
+                    this.tableController.initDatatables();
+                    alert('НЕ удалось изменить данные');
                 }
 
 
                 this.toggleControlButtons(false);
                 ControlButtons.toggleDisableAllCopyButtons(false);
             } else {
+                this.tableController.initDatatables();
                 alert('Данные введены неверно')
             }
         }
