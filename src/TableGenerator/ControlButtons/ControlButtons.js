@@ -326,8 +326,8 @@ export class ControlButtons {
 }
 
 /// data tables +
-/// если не dict - инпут
-/// если dict - селект
+/// если не dict - инпут +
+/// если dict - селект +
 /// если  mesure  - добавляется ЕИ, дефолтное если есть - устанавливаем +
 /// conf, data, route -> blade(index) +
 /// удаление object-object +

@@ -34,6 +34,19 @@ export class Header {
             el.colspan && newCell.setAttribute('colspan', el.colspan);
             el.rowspan && newCell.setAttribute('rowspan', el.rowspan);
 
+            if(el.options) {
+                let idOption = '';
+                let valOption = '';
+
+                el.options.forEach(val => {
+                    idOption += `${val.id},`
+                    valOption += `${val.value},`
+                });
+
+                newCell.setAttribute('option-id', idOption);
+                newCell.setAttribute('option-val', valOption);
+            }
+
             if(el.measureVal) {
                 let idList = '';
                 let valList = '';

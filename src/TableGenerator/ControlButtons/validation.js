@@ -8,15 +8,30 @@ export function validateData(data) {
         return false
     }
 
-    data.rules.forEach(el => {
-        !checkValid(el) && (isValid = false)
-    })
+
+    const premium = data.rules.filter(el => {
+        !checkValid(el) && (isValid = false);
+        return el.grade === 'premium'
+    });
+    const secondary = data.rules.filter(el => {
+        !checkValid(el) && (isValid = false);
+        return el.grade === 'secondary'
+    });
+    const reject = data.rules.filter(el => {
+        !checkValid(el) && (isValid = false);
+        return el.grade === 'reject';
+    });
+
+    isValid = checkValidDifference(premium)
+    isValid && (isValid = checkValidDifference(secondary))
+    isValid && (isValid = checkValidDifference(reject))
 
     return isValid;
 
 }
 
 function checkValid(el) {
+
 
     // (el.min === '' || el.min === 0) && (el.min = null);
     // (el.max === '' || el.max === 0) && (el.max = null);
@@ -46,4 +61,20 @@ function checkValid(el) {
     // }
 
     return true;
+}
+
+function checkValidDifference(values) {
+    const inner = values.filter(el => el.id === 'inner_diameter')[0];
+    const outer = values.filter(el => el.id === 'outer_diameter')[0];
+    const innerVal = getValue(inner)
+    const outerVal = getValue(outer);
+
+    return +outerVal > +innerVal;
+}
+
+function getValue({min, max, eq}) {
+    console.log(min, max, eq)
+    if(min && min !== "-1") return min;
+    if(max && max !== "-1") return max;
+    if(eq && max !== "-1") return eq;
 }

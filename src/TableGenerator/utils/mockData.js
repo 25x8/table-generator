@@ -17,7 +17,7 @@ export const conf = {
             id: "inner_diameter",
             label: "Внутренний диаметр",
             dict: true,
-            options: [{id: 0, value: 25}, {id: 1, value: 50}, {id: 2, value: 100}]
+            options: [{id: 25, value: 25}, {id: 50, value: 50}, {id: 100, value: 100}]
         },
         {
             id: "outer_diameter",
@@ -64,9 +64,9 @@ export const data = [
             {
                 id: "inner_diameter",
                 min: 100,
-                max: 200,
-                eq: 50,
-                grade: "premium"
+                max: null,
+                eq: null,
+                grade: "premium",
             },
             {
                 id: "outer_diameter",

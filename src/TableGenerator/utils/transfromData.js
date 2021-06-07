@@ -57,7 +57,7 @@ function setInputsRows(inputs, grades) {
                 colspan
             });
 
-            thirdRow = [...thirdRow, ...setInputHeader(`${input.id}-${grade.id}`, input.dict, input.measure)];
+            thirdRow = [...thirdRow, ...setInputHeader(`${input.id}-${grade.id}`, input.dict ? input.options : null, input.measure)];
         })
 
         firstRow.push({
@@ -80,7 +80,7 @@ function setCharacteristicRow(data) {
     let colspanFirstRow = 0;
 
 
-    data.forEach(({label, id, dict, measure}) => {
+    data.forEach(({label, id, dict, options, measure}) => {
 
         const colspan = !measure ? 3 : 4
 
@@ -93,7 +93,7 @@ function setCharacteristicRow(data) {
             parentId: 'characteristics'
         });
 
-        thirdRow = [...thirdRow, ...setInputHeader(id, dict, measure)];
+        thirdRow = [...thirdRow, ...setInputHeader(id, dict ? options : null, measure)];
 
     });
 
@@ -104,23 +104,26 @@ function setCharacteristicRow(data) {
     }
 }
 
-function setInputHeader(parentId, dict, measure) {
+function setInputHeader(parentId, options, measure) {
 
     const defaultInput = [
         {
             parentId,
             id: `min`,
-            label: '<'
+            label: '<',
+            options
         },
         {
             parentId,
             id: `max`,
-            label: '>'
+            label: '>',
+            options
         },
         {
             parentId,
             id: `eq`,
-            label: '='
+            label: '=',
+            options
         }
     ];
 
@@ -154,6 +157,7 @@ export function getBodyRows(data, rowsPattern, tableObject) {
                 dataObject = rowData['rules'].filter(el => {
                     return `${el.id}-${el.grade}` === pattern[1]
                 })[0];
+
             }
 
             let cellData = null;
@@ -168,7 +172,17 @@ export function getBodyRows(data, rowsPattern, tableObject) {
                 );
 
             } else {
-                cellData = dataObject[pattern[2]];
+                const optionCell = document.querySelector(`[parent-id="${pattern[1]}"][self-id="${pattern[2]}"]`)
+                cellData = optionCell.getAttribute('option-val');
+                if(cellData) {
+                    cellData = createSelect(
+                        cellData.split(','),
+                        optionCell.getAttribute('option-id').split(','),
+                        dataObject[pattern[2]]
+                    )
+                } else {
+                    cellData = dataObject[pattern[2]];
+                }
             }
             row.push(cellData)
 
@@ -197,19 +211,28 @@ export function getBodyRows(data, rowsPattern, tableObject) {
 
 function createSelect(options, idList, measure) {
     const select = document.createElement("select");
+    let selected = false
 
     options.forEach((el, index) => {
         const opt = document.createElement("option");
 
-        opt.value = el === '' ? -1 : idList[index];
+        opt.value = el ? idList[index] : -1;
         opt.text = el;
 
         select.add(opt, null);
 
-        +opt.value === +measure && opt.setAttribute('selected', 'selected')
+
+        if(+opt.value === +measure) {
+            opt.setAttribute('selected', 'selected');
+            selected = true;
+        }
+
         select.setAttribute('disabled', 'disabled');
     })
 
+    if(!selected) {
+        $(select).val(-1).change()
+    }
 
     return select
 }
