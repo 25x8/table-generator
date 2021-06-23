@@ -2,15 +2,14 @@ import {Header} from "./Header/Header";
 import {Body} from "./Body/Body";
 import {ControlButtons} from "./ControlButtons/ControlButtons";
 import dtRussian from './utils/dtRussian.json'
+
 import 'datatables.net/js/jquery.dataTables.min';
-
-
 import 'datatables.net-buttons/js/dataTables.buttons.min';
 import 'datatables.net-dt/css/jquery.dataTables.min.css';
 import 'datatables.net-buttons-dt/css/buttons.dataTables.min.css';
 import 'datatables.net-fixedheader/js/dataTables.fixedHeader.min';
 import 'datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css';
-import "./table.scss";
+
 
 
 export class TableGenerator {

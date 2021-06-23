@@ -2,12 +2,17 @@ import {getHeaders, getBodyRows} from "./TableGenerator/utils/transfromData";
 import {conf, data} from "./TableGenerator/utils/mockData";
 
 import {TableGenerator} from "./TableGenerator/TableGenerator";
+import {mirageServer} from "./api/mirage";
 
 window.conf = conf;
 window.data = data;
 window.save = '/api/save';
 window.edit = '/api/edit';
 window.delete = '/api/delete';
+
+if (process.env.NODE_ENV === "development") {
+    mirageServer()
+}
 
 document.body.onload = () => {
     createTable('root');

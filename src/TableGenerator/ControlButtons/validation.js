@@ -22,9 +22,9 @@ export function validateData(data) {
         return el.grade === 'reject';
     });
 
-    isValid = checkValidDifference(premium)
-    isValid && (isValid = checkValidDifference(secondary))
-    isValid && (isValid = checkValidDifference(reject))
+    // isValid = checkValidDifference(premium)
+    // isValid && (isValid = checkValidDifference(secondary))
+    // isValid && (isValid = checkValidDifference(reject))
 
     return isValid;
 
