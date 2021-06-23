@@ -8,15 +8,19 @@ async function getResource(url, init = {}) {
 
 
     try {
-        const res = await fetch(`${BASE_URL}${url}`, init);
+        const res = await fetch(`${url}`, init);
         return await res.json();
     } catch (e) {
+        console.error(e)
         alert('Ошибка изменения данных')
     }
 
 
 }
 
+export async function getAllData() {
+    return await getResource('/api/datum')
+}
 
 export async function saveData(data) {
     const init = {

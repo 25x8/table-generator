@@ -3,22 +3,22 @@ import {belongsTo, createServer, hasMany, Model} from "miragejs";
 export const mirageServer = () => createServer({
     environment: 'development',
     models: {
-        data: Model.extend({
-            characteristics: hasMany(),
-            rules: hasMany()
+        datum: Model.extend({
+            characteristic: hasMany(),
+            rule: hasMany()
         }),
-        rules: Model.extend({
-            data: belongsTo()
+        rule: Model.extend({
+            datum: belongsTo()
         }),
-        characteristics: Model.extend({
-            data: belongsTo()
+        characteristic: Model.extend({
+            datum: belongsTo()
         })
     },
     routes() {
         this.namespace = 'api';
 
-        this.get('/data', (schema, request) => {
-            return schema.data.all()
+        this.get('/datum', (schema, request) => {
+            return schema.data.first().attrs
         })
 
         // this.delete('/delete/:id', (schema, request) => {
@@ -28,10 +28,10 @@ export const mirageServer = () => createServer({
     },
 
     seeds(server) {
-        const dataOne = server.create('data', {id: 1});
+        const datumOne = server.create('datum', {id: 1});
 
-        server.create('characteristics', {
-            data: dataOne,
+        server.create('characteristic', {
+            datum: datumOne,
             id: "weight",
             min: null,
             max: null,
@@ -39,8 +39,8 @@ export const mirageServer = () => createServer({
             measure: 0
         });
 
-        server.create('characteristics', {
-            data: dataOne,
+        server.create('characteristic', {
+            datum: datumOne,
             id: "length",
             min: null,
             max: null,
@@ -48,8 +48,8 @@ export const mirageServer = () => createServer({
             measure: 1
         });
 
-        server.create('characteristics', {
-            data: dataOne,
+        server.create('rule', {
+            datum: datumOne,
             id: "inner_diameter",
             min: 100,
             max: null,
@@ -57,8 +57,8 @@ export const mirageServer = () => createServer({
             grade: "premium",
         });
 
-        server.create('characteristics', {
-            data: dataOne,
+        server.create('rule', {
+            datum: datumOne,
             id: "outer_diameter",
             min: null,
             max: null,
@@ -66,8 +66,8 @@ export const mirageServer = () => createServer({
             grade: "premium"
         });
 
-        server.create('characteristics', {
-            data: dataOne,
+        server.create('rule', {
+            datum: datumOne,
             id: "inner_diameter",
             min: null,
             max: null,
@@ -75,8 +75,8 @@ export const mirageServer = () => createServer({
             grade: "secondary"
         });
 
-        server.create('characteristics', {
-            data: dataOne,
+        server.create('rule', {
+            datum: datumOne,
             id: "outer_diameter",
             min: null,
             max: null,
@@ -84,8 +84,8 @@ export const mirageServer = () => createServer({
             grade: "secondary"
         });
 
-        server.create('characteristics', {
-            data: dataOne,
+        server.create('rule', {
+            datum: datumOne,
             id: "inner_diameter",
             min: null,
             max: null,
@@ -93,8 +93,8 @@ export const mirageServer = () => createServer({
             grade: "reject"
         });
 
-        server.create('characteristics', {
-            data: dataOne,
+        server.create('rule', {
+            datum: datumOne,
             id: "outer_diameter",
             min: null,
             max: null,

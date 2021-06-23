@@ -3,6 +3,7 @@ import {conf, data} from "./TableGenerator/utils/mockData";
 
 import {TableGenerator} from "./TableGenerator/TableGenerator";
 import {mirageServer} from "./api/mirage";
+import {getAllData} from "./api/api";
 
 window.conf = conf;
 window.data = data;
@@ -11,10 +12,11 @@ window.edit = '/api/edit';
 window.delete = '/api/delete';
 
 if (process.env.NODE_ENV === "development") {
-    mirageServer()
+    mirageServer();
 }
 
-document.body.onload = () => {
+document.body.onload =async () => {
+    await getAllData();
     createTable('root');
 }
 
