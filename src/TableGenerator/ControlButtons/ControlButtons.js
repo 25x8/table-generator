@@ -77,6 +77,7 @@ export class ControlButtons {
             await btnController.tableController.datatablesWrapper.destroy();
             if (validateData(data)) {
                 try {
+                    delete data.id
                     const {id: newId} = await saveData(data);
                     newStore[index !== -1 ? index : newStore.length - 1].id = newId;
                     btnController.tableController.updateBody(newStore);

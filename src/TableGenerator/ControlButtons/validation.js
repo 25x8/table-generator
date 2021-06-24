@@ -65,8 +65,8 @@ function checkValid(el) {
 
 function checkValidDifference({gradeBetter, gradeWorse}) {
 
-    const betterExtr = +getMinMax(gradeBetter);
-    const worseExtr = +getMinMax(gradeWorse);
+    const betterExtr = getMinMax(gradeBetter);
+    const worseExtr = getMinMax(gradeWorse);
 
     return betterExtr.min > worseExtr.max;
 }
