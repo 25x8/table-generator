@@ -214,20 +214,22 @@ function createSelect(options, idList, measure) {
     let selected = false
 
     options.forEach((el, index) => {
-        const opt = document.createElement("option");
+        if(el !== '') {
+            const opt = document.createElement("option");
 
-        opt.value = el ? idList[index] : -1;
-        opt.text = el;
+            opt.value = el ? idList[index] : -1;
+            opt.text = el;
 
-        select.add(opt, null);
+            select.add(opt, null);
 
 
-        if(+opt.value === +measure) {
-            opt.setAttribute('selected', 'selected');
-            selected = true;
+            if (+opt.value === +measure) {
+                opt.setAttribute('selected', 'selected');
+                selected = true;
+            }
+
+            select.setAttribute('disabled', 'disabled');
         }
-
-        select.setAttribute('disabled', 'disabled');
     })
 
     if(!selected) {

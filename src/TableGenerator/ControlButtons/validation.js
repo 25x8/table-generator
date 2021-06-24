@@ -22,8 +22,8 @@ export function validateData(data) {
         return el.grade === 'reject';
     });
 
-    // isValid = checkValidDifference(premium)
-    // isValid && (isValid = checkValidDifference(secondary))
+    isValid = checkValidDifference({gradeBetter: premium, gradeWorse: secondary});
+    isValid && (isValid = checkValidDifference({gradeBetter: secondary, gradeWorse: reject}));
     // isValid && (isValid = checkValidDifference(reject))
 
     return isValid;
@@ -63,13 +63,27 @@ function checkValid(el) {
     return true;
 }
 
-function checkValidDifference(values) {
+function checkValidDifference({gradeBetter, gradeWorse}) {
+
+    const betterExtr = +getMinMax(gradeBetter);
+    const worseExtr = +getMinMax(gradeWorse);
+
+    return betterExtr.min > worseExtr.max;
+}
+
+function getMinMax(values) {
     const inner = values.filter(el => el.id === 'inner_diameter')[0];
     const outer = values.filter(el => el.id === 'outer_diameter')[0];
-    const innerVal = getValue(inner)
-    const outerVal = getValue(outer);
+    const innerVal = +getValue(inner)
+    const outerVal = +getValue(outer);
 
-    return +outerVal > +innerVal;
+    const min = outerVal < innerVal ? outerVal : innerVal;
+    const max = outerVal > innerVal ? outerVal : innerVal;
+
+    return {
+        min,
+        max
+    }
 }
 
 function getValue({min, max, eq}) {
