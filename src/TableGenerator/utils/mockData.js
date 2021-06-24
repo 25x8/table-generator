@@ -44,7 +44,7 @@ export const conf = {
 
 export const data = [
     {
-        id: "data-1",
+        id: 1,
         characteristics: [
             {
                 id: "weight",

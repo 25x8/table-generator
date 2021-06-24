@@ -1,5 +1,3 @@
-const BASE_URL = window.host;
-
 async function getResource(url, init = {}) {
 
     init['headers'] = new Headers({
@@ -18,16 +16,12 @@ async function getResource(url, init = {}) {
 
 }
 
-export async function getAllData() {
-    return await getResource('/api/datum')
-}
-
 export async function saveData(data) {
     const init = {
-        method: 'POST',
+        method: 'PUT',
         body: JSON.stringify(data)
     }
-    return await getResource(window.save, init);
+    return await getResource(window.add, init);
 }
 
 export async function editData(id, data) {

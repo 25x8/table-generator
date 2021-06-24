@@ -1,105 +1,38 @@
-import {belongsTo, createServer, hasMany, Model} from "miragejs";
+import {belongsTo, createServer, hasMany, JSONAPISerializer, Model} from "miragejs";
 
 export const mirageServer = () => createServer({
     environment: 'development',
     models: {
-        datum: Model.extend({
-            characteristic: hasMany(),
-            rule: hasMany()
-        }),
-        rule: Model.extend({
-            datum: belongsTo()
-        }),
-        characteristic: Model.extend({
-            datum: belongsTo()
-        })
+        idList: Model,
+        lastId: Model
+    },
+    serializers: {
+        application: JSONAPISerializer,
     },
     routes() {
         this.namespace = 'api';
 
-        this.get('/datum', (schema, request) => {
-            return schema.data.first().attrs
-        })
+        this.post('edit/:id', (schema, request) => {
 
-        // this.delete('/delete/:id', (schema, request) => {
-        //     const id = request.params.id;
-        //     schema.
-        // })
+        });
+
+        this.put('add', (schema, request) => {
+            const lastId = schema.lastIds.first();
+            const val = lastId.val + 1;
+            lastId.update({val});
+            schema.idLists.create({val})
+            return {id: val};
+        });
+
+        this.delete('/delete/:id', (schema, request) => {
+            const id = request.params.id;
+            schema.idLists.find(id).destroy();
+            return schema.idLists.all()
+        })
     },
 
     seeds(server) {
-        const datumOne = server.create('datum', {id: 1});
-
-        server.create('characteristic', {
-            datum: datumOne,
-            id: "weight",
-            min: null,
-            max: null,
-            eq: null,
-            measure: 0
-        });
-
-        server.create('characteristic', {
-            datum: datumOne,
-            id: "length",
-            min: null,
-            max: null,
-            eq: null,
-            measure: 1
-        });
-
-        server.create('rule', {
-            datum: datumOne,
-            id: "inner_diameter",
-            min: 100,
-            max: null,
-            eq: null,
-            grade: "premium",
-        });
-
-        server.create('rule', {
-            datum: datumOne,
-            id: "outer_diameter",
-            min: null,
-            max: null,
-            eq: null,
-            grade: "premium"
-        });
-
-        server.create('rule', {
-            datum: datumOne,
-            id: "inner_diameter",
-            min: null,
-            max: null,
-            eq: null,
-            grade: "secondary"
-        });
-
-        server.create('rule', {
-            datum: datumOne,
-            id: "outer_diameter",
-            min: null,
-            max: null,
-            eq: null,
-            grade: "secondary"
-        });
-
-        server.create('rule', {
-            datum: datumOne,
-            id: "inner_diameter",
-            min: null,
-            max: null,
-            eq: null,
-            grade: "reject"
-        });
-
-        server.create('rule', {
-            datum: datumOne,
-            id: "outer_diameter",
-            min: null,
-            max: null,
-            eq: null,
-            grade: "reject"
-        });
+        server.create('idList', {val: 1});
+        server.create('lastId', {val: 1});
     }
 })
