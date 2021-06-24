@@ -20,12 +20,14 @@ export class TableGenerator {
     body;
     dataTransformator;
     currentData;
+    static addBtnId
 
 
-    constructor({container, headerData}) {
+    constructor({container, headerData, addBtnId}) {
         this.createWrapper(container);
         this.createTable();
         this.createHeader(headerData);
+        TableGenerator.addBtnId = addBtnId;
     }
 
     createWrapper(container) {
@@ -87,7 +89,8 @@ export class TableGenerator {
                     text: '<i class="bi bi-plus-lg"></i>',
                     action: function () {
                         ControlButtons.createAddRow(tableController);
-                    }
+                    },
+                    className: TableGenerator.addBtnId
                 }
             ]
         })

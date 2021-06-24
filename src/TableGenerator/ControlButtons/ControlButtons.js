@@ -2,6 +2,7 @@ import './control-buttons.scss';
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import {deleteDataTable, editData, saveData} from "../../api/api";
 import {validateData} from "./validation";
+import {TableGenerator} from "../TableGenerator";
 
 export class ControlButtons {
 
@@ -15,7 +16,6 @@ export class ControlButtons {
         delete: null,
         save: null
     }
-
 
     constructor({tableController, rowHTML}) {
         this.tableController = tableController;
@@ -71,27 +71,29 @@ export class ControlButtons {
         btnController.setCellsEditable(data);
         ControlButtons.toggleDisableAllCopyButtons(true);
         btnController.buttons.save.onclick = async () => {
-            btnController.tableController.datatablesWrapper.destroy();
+            const tableCopy = document.querySelector('.table-wrapper').cloneNode(true);
+            btnController.tableController.HTMLWrapper.style.display = 'none';
+            document.querySelector('#root').appendChild(tableCopy)
+            await btnController.tableController.datatablesWrapper.destroy();
             if (validateData(data)) {
                 try {
-                    const newId = await saveData(data);
-                    newStore[index !== -1 ? index : newStore.length - 1].id = newId ? newId : Date.now();
+                    const {id: newId} = await saveData(data);
+                    newStore[index !== -1 ? index : newStore.length - 1].id = newId;
                     btnController.tableController.updateBody(newStore);
-                    btnController.tableController.initDatatables();
                     alert('Данные изменены');
                 } catch (e) {
                     btnController.store.splice(index, 1);
                     btnController.tableController.updateBody(btnController.store);
-                    btnController.tableController.initDatatables();
                     alert('НЕ удалось изменить данные');
                 }
             } else {
                 btnController.store.splice(index, 1);
                 btnController.tableController.updateBody(btnController.store);
-                btnController.tableController.initDatatables();
                 alert('Данные введены не верно')
             }
-
+            btnController.tableController.initDatatables();
+            tableCopy.remove();
+            btnController.tableController.HTMLWrapper.style.display = 'inherit'
         }
     }
 
@@ -128,6 +130,9 @@ export class ControlButtons {
 
     async setSaveButtonSaveEdits(id, data, index) {
         this.buttons.save.onclick = async () => {
+            const tableCopy = document.querySelector('.table-wrapper').cloneNode(true);
+            this.tableController.HTMLWrapper.style.display = 'none';
+            document.querySelector('#root').appendChild(tableCopy)
             this.tableController.datatablesWrapper.destroy();
             if (validateData(data)) {
                 try {
@@ -135,16 +140,14 @@ export class ControlButtons {
                     this.store[index] = {
                         ...data
                     }
-                    this.tableController.updateBody(this.store);
-                    this.tableController.initDatatables();
                     alert('Данные изменены')
                 } catch (e) {
-                    this.tableController.updateBody(this.store);
-                    this.tableController.initDatatables();
                     alert('НЕ удалось изменить данные');
                 }
-
-
+                this.tableController.updateBody(this.store);
+                this.tableController.initDatatables();
+                tableCopy.remove();
+                this.tableController.HTMLWrapper.style.display = 'inherit'
                 this.toggleControlButtons(false);
                 ControlButtons.toggleDisableAllCopyButtons(false);
             } else {
@@ -181,7 +184,6 @@ export class ControlButtons {
 
         selectCell.forEach((select, index) => {
             select.removeAttribute('disabled');
-
         })
 
         rowCells.forEach((cell, index) => {
@@ -202,8 +204,8 @@ export class ControlButtons {
 
             cell.oninput = (e) => {
                 editGroup[this.rowPattern[index][2]] = Number(e.target.textContent);
-                if(e.target.tagName === 'SELECT') {
-                    $(e.target).on('select2:select',  () => {
+                if (e.target.tagName === 'SELECT') {
+                    $(e.target).on('select2:select', () => {
                         editGroup[this.rowPattern[index][2]] = $(e.target).val()
                     });
                 }
@@ -235,16 +237,24 @@ export class ControlButtons {
     }
 
     static toggleDisableAllCopyButtons(disable) {
-        const buttons = document.querySelectorAll('.button-add, .button-delete, .button-copy,  .button-edit');
-        disable
-            ? buttons.forEach(el => el.setAttribute('disabled', `${disable}`))
-            : buttons.forEach(el => el.removeAttribute('disabled'))
+        const addBtn = document.querySelector(`.${TableGenerator.addBtnId}`);
+        const buttons = document.querySelectorAll('.button-delete, .button-copy,  .button-edit');
 
-
+        if (disable) {
+            buttons.forEach(el => el.setAttribute('disabled', `${disable}`));
+            addBtn.classList.add('disabled');
+        } else {
+            buttons.forEach(el => el.removeAttribute('disabled'));
+            addBtn.classList.remove('disabled');
+        }
     }
 
     async deleteData(id) {
         console.log(id)
+        const tableCopy = document.querySelector('.table-wrapper').cloneNode(true);
+        this.tableController.HTMLWrapper.style.display = 'none';
+        document.querySelector('#root').appendChild(tableCopy);
+        await this.tableController.datatablesWrapper.destroy();
         const index = this.store.findIndex(el => el.id === id);
         try {
             await deleteDataTable(id);
@@ -254,6 +264,9 @@ export class ControlButtons {
         } catch (e) {
             alert('Ошибка удаления')
         }
+        this.tableController.initDatatables();
+        tableCopy.remove();
+        this.tableController.HTMLWrapper.style.display = 'inherit'
 
 
     }

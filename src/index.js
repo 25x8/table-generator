@@ -39,6 +39,7 @@ export function createTable({tableWrapId, addBtnId, api, conf, data}) {
     const table = new TableGenerator({
         container: document.getElementById(tableWrapId),
         headerData: headerRows,
+        addBtnId
     });
 
     const bodyRows = getBodyRows(data, table.getRowPattern(), table);
