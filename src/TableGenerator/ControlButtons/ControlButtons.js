@@ -130,11 +130,12 @@ export class ControlButtons {
 
     async setSaveButtonSaveEdits(id, data, index) {
         this.buttons.save.onclick = async () => {
-            const tableCopy = document.querySelector('.table-wrapper').cloneNode(true);
-            this.tableController.HTMLWrapper.style.display = 'none';
-            document.querySelector('#root').appendChild(tableCopy)
-            this.tableController.datatablesWrapper.destroy();
+
             if (validateData(data)) {
+                const tableCopy = document.querySelector('.table-wrapper').cloneNode(true);
+                this.tableController.HTMLWrapper.style.display = 'none';
+                document.querySelector('#root').appendChild(tableCopy)
+                this.tableController.datatablesWrapper.destroy();
                 try {
                     await editData(id, data);
                     this.store[index] = {
@@ -151,9 +152,10 @@ export class ControlButtons {
                 this.toggleControlButtons(false);
                 ControlButtons.toggleDisableAllCopyButtons(false);
             } else {
-                this.tableController.initDatatables();
+
                 alert('Данные введены неверно')
             }
+
         }
 
     }
