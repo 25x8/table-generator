@@ -60,6 +60,7 @@ export class Body {
             } else {
 
                 newCell.setAttribute('field-type', cell.dataType);
+                newCell.setAttribute('cell-type', cell.cellType);
 
                 if(cell.cellData instanceof HTMLElement) {
                     newCell.append(cell.cellData);

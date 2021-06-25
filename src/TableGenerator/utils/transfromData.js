@@ -148,10 +148,11 @@ export function getBodyRows(data, rowsPattern, tableObject) {
         rowsPattern.forEach(pattern => {
 
             const dataType = pattern[0];
+            const cellType = pattern[1];
 
             let cellData = null;
-
             let dataObject = {};
+
             if (dataType === 'characteristics') {
                 dataObject = rowData['characteristics'].filter(el => {
                     return el.id === pattern[1]
@@ -187,8 +188,11 @@ export function getBodyRows(data, rowsPattern, tableObject) {
                     cellData = dataObject[pattern[2]];
                 }
             }
+
+
             row.push({
                 cellData,
+                cellType,
                 dataType
             })
 
