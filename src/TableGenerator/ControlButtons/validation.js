@@ -24,7 +24,6 @@ export function validateData(data) {
 
     isValid = checkValidDifference({gradeBetter: premium, gradeWorse: secondary});
     isValid && (isValid = checkValidDifference({gradeBetter: secondary, gradeWorse: reject}));
-    // isValid && (isValid = checkValidDifference(reject))
 
     return isValid;
 
