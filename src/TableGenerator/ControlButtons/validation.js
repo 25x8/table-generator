@@ -1,13 +1,16 @@
-export function validateData(data) {
+export function validateData(data, rowNumber) {
+    rowNumber === 0 && (rowNumber = +document.querySelector('tr[row-count]:last-of-type').getAttribute('row-count'))
+    removeHighlight();
+
     let isValid = true;
+
     data.characteristics.forEach(el => {
         !checkValid(el) && (isValid = false)
     });
 
-    if(!isValid) {
+    if (!isValid) {
         return false
     }
-
 
     const premium = data.rules.filter(el => {
         !checkValid(el) && (isValid = false);
@@ -23,10 +26,14 @@ export function validateData(data) {
     });
 
     isValid = checkValidDifference({gradeBetter: premium, gradeWorse: secondary});
+
+    !isValid && highlightNotValid(rowNumber, 'secondary')
+
     isValid && (isValid = checkValidDifference({gradeBetter: secondary, gradeWorse: reject}));
 
-    return isValid;
+    !isValid && highlightNotValid(rowNumber, 'reject');
 
+    return isValid;
 }
 
 function checkValid(el) {
@@ -88,7 +95,25 @@ function getMinMax(values) {
 
 function getValue({min, max, eq}) {
     console.log(min, max, eq)
-    if(min && min !== "-1") return min;
-    if(max && max !== "-1") return max;
-    if(eq && max !== "-1") return eq;
+    if (min && min !== "-1") return min;
+    if (max && max !== "-1") return max;
+    if (eq && max !== "-1") return eq;
+}
+
+function removeHighlight() {
+    const invalidFields = document.querySelectorAll('.invalid-field');
+    invalidFields.forEach((el, index) => {
+        el.classList.remove('invalid-field');
+        index === 0 && el.classList.remove('invalid-field__first');
+        index === invalidFields.length - 1 && el.classList.remove('invalid-field__last');
+    })
+}
+
+function highlightNotValid(rowNumber, grade) {
+    const invalidFields = document.querySelectorAll(`[row-count="${rowNumber}"] [field-type="${grade}"]`);
+    invalidFields.forEach((el, index) => {
+        el.classList.add('invalid-field');
+        index === 0 && el.classList.add('invalid-field__first');
+        index === invalidFields.length - 1 && el.classList.add('invalid-field__last');
+    })
 }

@@ -2,6 +2,18 @@
 //@import "~bootstrap/scss/variables";
 //@import "~bootstrap/scss/tables";
 
+$border: 1px solid red;
 
+.invalid-field {
+  border-top: $border;
+  border-bottom: $border;
 
+  &__first {
+    border-left: 1px solid red
+  }
+
+  &__last {
+    border-right: $border;
+  }
+}
 

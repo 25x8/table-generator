@@ -55,7 +55,6 @@ export class ControlButtons {
         });
     }
 
-
     static createAddRow(tableController) {
         const emptyData = ControlButtons.createEmptyData();
         emptyData.id = "new-id";
@@ -71,11 +70,11 @@ export class ControlButtons {
         btnController.setCellsEditable(data);
         ControlButtons.toggleDisableAllCopyButtons(true);
         btnController.buttons.save.onclick = async () => {
-            const tableCopy = document.querySelector('.table-wrapper').cloneNode(true);
-            btnController.tableController.HTMLWrapper.style.display = 'none';
-            document.querySelector('#root').appendChild(tableCopy)
-            await btnController.tableController.datatablesWrapper.destroy();
-            if (validateData(data)) {
+            if (validateData(data, index + 1)) {
+                const tableCopy = document.querySelector('.table-wrapper').cloneNode(true);
+                btnController.tableController.HTMLWrapper.style.display = 'none';
+                document.querySelector('#root').appendChild(tableCopy)
+                btnController.tableController.datatablesWrapper.destroy();
                 try {
                     delete data.id
                     const {id: newId} = await saveData(data);
@@ -87,14 +86,13 @@ export class ControlButtons {
                     btnController.tableController.updateBody(btnController.store);
                     alert('НЕ удалось изменить данные');
                 }
+                btnController.tableController.initDatatables();
+                tableCopy.remove();
+                btnController.tableController.HTMLWrapper.style.display = 'inherit';
             } else {
-                btnController.store.splice(index, 1);
-                btnController.tableController.updateBody(btnController.store);
                 alert('Данные введены не верно')
             }
-            btnController.tableController.initDatatables();
-            tableCopy.remove();
-            btnController.tableController.HTMLWrapper.style.display = 'inherit'
+
         }
     }
 
@@ -131,8 +129,7 @@ export class ControlButtons {
 
     async setSaveButtonSaveEdits(id, data, index) {
         this.buttons.save.onclick = async () => {
-
-            if (validateData(data)) {
+            if (validateData(data, index + 1)) {
                 const tableCopy = document.querySelector('.table-wrapper').cloneNode(true);
                 this.tableController.HTMLWrapper.style.display = 'none';
                 document.querySelector('#root').appendChild(tableCopy)
@@ -153,7 +150,6 @@ export class ControlButtons {
                 this.toggleControlButtons(false);
                 ControlButtons.toggleDisableAllCopyButtons(false);
             } else {
-
                 alert('Данные введены неверно')
             }
 

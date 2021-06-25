@@ -1,6 +1,7 @@
 export class Header {
 
     HTMLHeader;
+    colgroup;
     rowPattern = [];
 
     constructor({table, rows}) {
@@ -10,6 +11,8 @@ export class Header {
 
     initHTML(table) {
         this.HTMLHeader = document.createElement('thead');
+        this.colgroup = document.createElement('colgroup');
+
         table.appendChild(this.HTMLHeader);
     }
 
@@ -34,7 +37,7 @@ export class Header {
             el.colspan && newCell.setAttribute('colspan', el.colspan);
             el.rowspan && newCell.setAttribute('rowspan', el.rowspan);
 
-            if(el.options) {
+            if (el.options) {
                 let idOption = '';
                 let valOption = '';
 
@@ -47,7 +50,7 @@ export class Header {
                 newCell.setAttribute('option-val', valOption);
             }
 
-            if(el.measureVal) {
+            if (el.measureVal) {
                 let idList = '';
                 let valList = '';
                 el.measureVal.forEach(val => {
@@ -82,7 +85,7 @@ export class Header {
 
         function getParent(cell) {
             const parent = cell.getAttribute('parent-id');
-            if(parent) {
+            if (parent) {
                 path.push(parent);
                 const parentCell = document.querySelector(`[self-id=${parent}]`)
                 getParent(parentCell);
@@ -90,4 +93,6 @@ export class Header {
         }
 
     }
+
+
 }

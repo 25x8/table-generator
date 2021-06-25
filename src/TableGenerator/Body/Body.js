@@ -31,11 +31,11 @@ export class Body {
         const HTMLRow = document.createElement('tr');
         HTMLRow.setAttribute('row-count', `${this.rowCount}`);
         this.HTMLBody.appendChild(HTMLRow);
-
         row.forEach((cell, index) => {
             const newCell = document.createElement('td');
             newCell.setAttribute('cell-number', index)
             const lastCell = index === row.length - 1
+
             lastCell
                 ? newCell.setAttribute('row-count', `${this.rowCount}`)
                 : newCell.setAttribute('data-cell', 'true')
@@ -58,13 +58,16 @@ export class Body {
                }
 
             } else {
-                if(cell instanceof HTMLElement) {
-                    newCell.append(cell);
-                    $(cell).select2({
+
+                newCell.setAttribute('field-type', cell.dataType);
+
+                if(cell.cellData instanceof HTMLElement) {
+                    newCell.append(cell.cellData);
+                    $(cell.cellData).select2({
                         language: "ru"
                     });
                 } else {
-                    newCell.textContent = cell;
+                    newCell.textContent = cell.cellData;
                 }
 
             }
